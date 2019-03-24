@@ -59,7 +59,7 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
     private boolean lenientTypeCast = false;
     private boolean swiftUseApiNamespace;
     private String[] responseAs = new String[0];
-    protected String sourceFolder = "Sources" + File.separator + "Swaggers";
+    protected String sourceFolder = "Sources";
 
 
     // new attributes
@@ -154,7 +154,7 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
         } else {
             additionalProperties.put(PROJECT_NAME, projectName);
         }
-        sourceFolder = projectName + File.separator + sourceFolder;
+        sourceFolder = sourceFolder + File.separator + projectName;
 
         // Setup unwrapRequired option, which makes all the
         // properties with "required" non-optional
@@ -199,36 +199,39 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
 
         setLenientTypeCast(convertPropertyToBooleanAndWriteBack(LENIENT_TYPE_CAST));
 
-        supportingFiles.add(new SupportingFile("Podspec.mustache",
+//        supportingFiles.add(new SupportingFile("Podspec.mustache",
+//                "",
+//                projectName + ".podspec"));
+        supportingFiles.add(new SupportingFile("package.mustache",
                 "",
-                projectName + ".podspec"));
-        supportingFiles.add(new SupportingFile("Cartfile.mustache",
-                "",
-                "Cartfile"));
-        supportingFiles.add(new SupportingFile("APIHelper.mustache",
-                sourceFolder,
-                "APIHelper.swift"));
-        supportingFiles.add(new SupportingFile("AlamofireImplementations.mustache",
-                sourceFolder,
-                "AlamofireImplementations.swift"));
-        supportingFiles.add(new SupportingFile("Configuration.mustache",
-                sourceFolder,
-                "Configuration.swift"));
-        supportingFiles.add(new SupportingFile("Extensions.mustache",
-                sourceFolder,
-                "Extensions.swift"));
-        supportingFiles.add(new SupportingFile("Models.mustache",
-                sourceFolder,
-                "Models.swift"));
-        supportingFiles.add(new SupportingFile("APIs.mustache",
-                sourceFolder,
-                "APIs.swift"));
-        supportingFiles.add(new SupportingFile("git_push.sh.mustache",
-                "",
-                "git_push.sh"));
-        supportingFiles.add(new SupportingFile("gitignore.mustache",
-                "",
-                ".gitignore"));
+                "package.swift"));
+//        supportingFiles.add(new SupportingFile("Cartfile.mustache",
+//                "",
+//                "Cartfile"));
+//        supportingFiles.add(new SupportingFile("APIHelper.mustache",
+//                sourceFolder,
+//                "APIHelper.swift"));
+//        supportingFiles.add(new SupportingFile("AlamofireImplementations.mustache",
+//                sourceFolder,
+//                "AlamofireImplementations.swift"));
+//        supportingFiles.add(new SupportingFile("Configuration.mustache",
+//                sourceFolder,
+//                "Configuration.swift"));
+//        supportingFiles.add(new SupportingFile("Extensions.mustache",
+//                sourceFolder,
+//                "Extensions.swift"));
+//        supportingFiles.add(new SupportingFile("Models.mustache",
+//                sourceFolder,
+//                "Models.swift"));
+//        supportingFiles.add(new SupportingFile("APIs.mustache",
+//                sourceFolder,
+//                "APIs.swift"));
+//        supportingFiles.add(new SupportingFile("git_push.sh.mustache",
+//                "",
+//                "git_push.sh"));
+//        supportingFiles.add(new SupportingFile("gitignore.mustache",
+//                "",
+//                ".gitignore"));
     }
 
     @Override
@@ -241,7 +244,7 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
         if (this.reservedWordsMappings().containsKey(name)) {
             return this.reservedWordsMappings().get(name);
         }
-        return "_" + name;  // add an underscore to the name
+        return "`" + name + "`";  // add an underscore to the name
     }
 
     @Override
@@ -376,9 +379,9 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
     @Override
     public String toApiName(String name) {
         if (name.length() == 0) {
-            return "DefaultAPI";
+            return "DefaultApiDelegate";
         }
-        return initialCaps(name) + "API";
+        return initialCaps(name) + "ApiDelegate";
     }
 
     @Override

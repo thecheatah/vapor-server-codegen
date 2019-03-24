@@ -38,6 +38,13 @@ public class SwiftVapor3Codegen extends Swift4Codegen {
     return "Generates a SwiftVapor3 client library.";
   }
 
+  public void processOpts() {
+	super.processOpts();
+    supportingFiles.add(new SupportingFile("routes.mustache",
+    sourceFolder,
+    "routes.swift"));
+  }
+  
   public SwiftVapor3Codegen() {
 	  super();
   }

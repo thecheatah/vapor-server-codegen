@@ -140,15 +140,15 @@ public class Swift4Codegen extends AbstractSwiftCodegen {
     public void processOpts() {
         super.processOpts();
 
-        supportingFiles.add(new SupportingFile("CodableHelper.mustache",
-                sourceFolder,
-                "CodableHelper.swift"));
-        supportingFiles.add(new SupportingFile("JSONEncodableEncoding.mustache",
-                sourceFolder,
-                "JSONEncodableEncoding.swift"));
-        supportingFiles.add(new SupportingFile("JSONEncodingHelper.mustache",
-                sourceFolder,
-                "JSONEncodingHelper.swift"));
+//        supportingFiles.add(new SupportingFile("CodableHelper.mustache",
+//                sourceFolder,
+//                "CodableHelper.swift"));
+//        supportingFiles.add(new SupportingFile("JSONEncodableEncoding.mustache",
+//                sourceFolder,
+//                "JSONEncodableEncoding.swift"));
+//        supportingFiles.add(new SupportingFile("JSONEncodingHelper.mustache",
+//                sourceFolder,
+//                "JSONEncodingHelper.swift"));
     }
 
     @Override
