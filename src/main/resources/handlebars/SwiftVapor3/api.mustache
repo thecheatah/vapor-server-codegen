@@ -6,8 +6,9 @@
 // Template Input: {{importPath}}
 
 public protocol {{classname}} {
-{{#operation}}{{#contents}}{{#notes}}  ///{{notes}}
-{{/notes}}
+{{#operation}}{{#contents}}  /**
+	{{httpMethod}} {{{path}}}{{#notes}}
+    {{{notes}}}{{/notes}} */
     func {{operationId}}({{#hasParams}}{{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}>
 {{/contents}}{{/operation}}
 }
