@@ -88,6 +88,7 @@ public class Swift4Codegen extends AbstractSwiftCodegen {
         typeMapping.put("Integer", "Int");
         typeMapping.put("float", "Float");
         typeMapping.put("number", "Double");
+        typeMapping.put("BigDecimal", "Decimal");
         typeMapping.put("double", "Double");
         typeMapping.put("object", "Any");
         typeMapping.put("file", "URL");

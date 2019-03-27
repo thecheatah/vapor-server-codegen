@@ -91,6 +91,20 @@
                             </sources>
                         </configuration>
                     </execution>
+                    <execution>
+                    	<id>add_test_resource</id>
+                    	<phase>generate-test-sources</phase>
+                    	<goals>
+                    		<goal>add-test-resource</goal>
+                    	</goals>
+                        <configuration>
+                            <resources>
+                            	<resource>
+                            		<directory>src/main/resources</directory>
+                            	</resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -113,9 +127,27 @@
         </dependency>
         <dependency>
             <groupId>io.swagger.codegen.v3</groupId>
+            <artifactId>swagger-codegen-cli</artifactId>
+            <version>${swagger-codegen-version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-generators</artifactId>
             <version>${swagger-codegen-generators-version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>1.45</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>

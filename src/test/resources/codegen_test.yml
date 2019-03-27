@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Swift Vapor 3 Codegen Test
+  description: Used to test the codegen
+servers: 
+  - url: https://vapor.codegen/
+    description: Test Server
+paths:
+  /:
+    get:
+      operationId: rootPath
+      tags: [Path Parsing]
+      description: Test the ability to route the root path
+      responses:
+        '200':
+          description: OK
+  /path-single-depth:
+    get:
+      operationId: singleDepth
+      tags: [Path Parsing]
+      description: Test ability to parse single depth
+      responses:
+        '200':
+          description: OK
+  /path/multiple/depth:
+    get:
+      operationId: multipleDepth
+      tags: [Path Parsing]
+      description: Test ability to parse multiple depth
+      responses:
+        '200':
+          description: OK
+  /path/{parameter}:
+    get:
+      operationId: singleParameter
+      tags: [Path Parsing]
+      description: Test ability to intake single parameter
+      parameters:
+        - in: path
+          name: parameter
+          required: true
+          schema:
+            type: integer
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+  /path/{param1}/and/{param2}:
+    get:
+      operationId: multipleParameter
+      tags: [Path Parsing]
+      description: Test ability to intake single parameter
+      parameters:
+        - in: path
+          name: param1
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+        - in: path
+          name: param2
+          required: true
+          schema:
+            type: integer
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+  /query/parsing:
+    get:
+      operationId: queryParsing
+      tags: [Query Parsing]
+      description: Query parameter test
+      parameters:
+        - in: query
+          name: param1
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+        - in: query
+          name: param2
+          required: false
+          schema:
+            type: integer
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+  /schema/referenced/object:
+    get:
+      operationId: referencedObject
+      tags: [Data Model]
+      description: Test data model support
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
+components:
+  schemas:
+    SimpleString:
+      type: string
+      description: Simple String
+      example: "I am a simple string"
+    SimpleNumber:
+      type: number
+      description: Simple Number
+      example: 101.33
+    SimpleInteger:
+      type: integer
+      description: Simple Integer
+      example: 101.33
+    SimpleDate:
+      type: string
+      format: date-time
+      example: "1995-09-07T10:40:52.123Z"
+    SimpleEnumString:
+      type: string
+      enum: [Value 1, Value 2]
+      description: Enumerated string object
+    SimpleObject:
+      type: object
+      required: [simpleString, simpleNumber, simpleInteger, simpleDate, simpleEnumString]
+      properties:
+        simpleString:
+          $ref: '#/components/schemas/SimpleString'
+        simpleNumber:
+          $ref: '#/components/schemas/SimpleNumber'
+        simpleInteger:
+          $ref: '#/components/schemas/SimpleInteger'
+        simpleDate:
+          $ref: '#/components/schemas/SimpleDate'
+        simpleEnumString:
+          $ref: '#/components/schemas/SimpleEnumString'
+
+
