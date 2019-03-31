@@ -9,26 +9,26 @@ import Vapor
 import VaporTestInterface
 
 class PathParsingController: PathParsingApiDelegate {
-    
-    func multipleDepth() throws -> EventLoopFuture<HTTPStatus> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
-    }
-
-    func multipleParameter(param1: String, param2: Int) throws -> EventLoopFuture<HTTPStatus> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
-    }
-
-    func rootPath() throws -> EventLoopFuture<HTTPStatus> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
-    }
-    
-    func singleDepth() throws -> EventLoopFuture<HTTPStatus> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
-    }
-    
-    func singleParameter(parameter: Int) throws -> EventLoopFuture<HTTPStatus> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
-    }
+  
+  func multipleDepth(request: Request) throws -> EventLoopFuture<HTTPStatus> {
+    throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
+  }
+  
+  func multipleParameter(request: Request, param1: String, param2: Int) throws -> EventLoopFuture<HTTPStatus> {
+    throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
+  }
+  
+  func rootPath(request: Request) throws -> EventLoopFuture<HTTPStatus> {
+    return request.future(HTTPStatus.ok)
+  }
+  
+  func singleDepth(request: Request) throws -> EventLoopFuture<HTTPStatus> {
+    return request.future(HTTPStatus.ok)
+  }
+  
+  func singleParameter(request: Request, parameter: String) throws -> EventLoopFuture<String> {
+    return request.future(parameter)
+  }
 }
 
 

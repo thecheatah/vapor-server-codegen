@@ -41,11 +41,17 @@ paths:
           name: parameter
           required: true
           schema:
-            type: integer
+            type: string
           description: Simple input string
       responses:
         '200':
           description: OK
+          content:
+            applicatin/json:
+              schema:
+                type: string
+                example: parameter
+                description: Returns the parameter value
   /path/{param1}/and/{param2}:
     get:
       operationId: multipleParameter

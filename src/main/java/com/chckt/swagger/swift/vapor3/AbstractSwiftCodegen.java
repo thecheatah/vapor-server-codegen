@@ -204,7 +204,7 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
 //                projectName + ".podspec"));
         supportingFiles.add(new SupportingFile("package.mustache",
                 "",
-                "package.swift"));
+                "Package.swift"));
 //        supportingFiles.add(new SupportingFile("Cartfile.mustache",
 //                "",
 //                "Cartfile"));

@@ -15,7 +15,7 @@ private class SwaggerPath: PathComponentsRepresentable {
   public func convertToPathComponents() -> [PathComponent] {
     return path.split(separator: "/").map {
       if $0.starts(with: "{") && $0.hasSuffix("}") {
-        return PathComponent.parameter(.init($0.suffix($0.count - 1).prefix($0.count - 2)))
+        return PathComponent.parameter("string")
       } else {
         return PathComponent.constant(.init($0))
       }
@@ -27,13 +27,13 @@ public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{cl
 {{#apiInfo}}{{#apis}}
   //for {{classVarName}}
 {{#operations}}{{#operation}}{{#contents}}
-  router.on(.{{httpMethod}}, at: [SwaggerPath(path: "{{path}}")]) { request -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}> in
+  router.on(.{{httpMethod}}, at: SwaggerPath(path: "{{path}}")) { request -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}> in
 {{#queryParams}}
     let {{paramName}} = try{{^required}}?{{/required}} request.query.get({{dataType}}.self, at: "{{paramName}}")
 {{/queryParams}}{{#pathParams}}    let {{paramName}} = try request.parameters.next({{dataType}}.self)
 {{/pathParams}}{{#bodyParam}}    return try request.content.decode({{dataType}}.self).flatMap { body in
   {{/bodyParam}}
-    return try {{classVarName}}.{{operationId}}({{#hasParams}}{{#parameters}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}})
+    return try {{classVarName}}.{{operationId}}(request: request{{#hasParams}}, {{#parameters}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}})
 {{#bodyParam}}  	}
 {{/bodyParam}}
   }

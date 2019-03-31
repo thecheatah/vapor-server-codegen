@@ -9,7 +9,7 @@ public protocol {{classname}} {
 {{#operation}}{{#contents}}  /**
 	{{httpMethod}} {{{path}}}{{#notes}}
     {{{notes}}}{{/notes}} */
-    func {{operationId}}({{#hasParams}}{{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}>
+    func {{operationId}}(request: Request{{#hasParams}}, {{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}>
 {{/contents}}{{/operation}}
 }
 {{/operations}}

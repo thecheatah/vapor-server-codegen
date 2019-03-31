@@ -9,7 +9,7 @@ import Vapor
 import VaporTestInterface
 
 class QueryParsingController: QueryParsingApiDelegate {
-    func queryParsing(param1: String, param2: Int?) throws -> EventLoopFuture<HTTPStatus> {
+    func queryParsing(request: Request, param1: String, param2: Int?) throws -> EventLoopFuture<HTTPStatus> {
         throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
     }
 }

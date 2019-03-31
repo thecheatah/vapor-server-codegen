@@ -9,7 +9,8 @@ import Vapor
 import VaporTestInterface
 
 class DataModelController: DataModelApiDelegate {
-    func referencedObject() throws -> EventLoopFuture<SimpleObject> {
-        throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
+    func referencedObject(request: Request) throws -> EventLoopFuture<SimpleObject> {
+        let result = SimpleObject(simpleString: "String", simpleNumber: 45, simpleInteger: 10, simpleDate: Date(), simpleEnumString: SimpleEnumString._1)
+        return request.future(result)
     }
 }
