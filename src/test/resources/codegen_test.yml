@@ -68,11 +68,15 @@ paths:
           name: param2
           required: true
           schema:
-            type: integer
+            type: string
           description: Simple input string
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultipleParameterResponse'
   /query/parsing:
     get:
       operationId: queryParsing
@@ -142,5 +146,12 @@ components:
           $ref: '#/components/schemas/SimpleDate'
         simpleEnumString:
           $ref: '#/components/schemas/SimpleEnumString'
-
+    MultipleParameterResponse:
+      type: object
+      required: [param1, param2]
+      properties:
+        param1:
+          type: string
+        param2:
+          type: string
 

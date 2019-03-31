@@ -11,11 +11,11 @@ import VaporTestInterface
 class PathParsingController: PathParsingApiDelegate {
   
   func multipleDepth(request: Request) throws -> EventLoopFuture<HTTPStatus> {
-    throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
+    return request.future(HTTPStatus.ok)
   }
   
-  func multipleParameter(request: Request, param1: String, param2: Int) throws -> EventLoopFuture<HTTPStatus> {
-    throw HTTPError(identifier: "NOT_IMPLEMENTED", reason: "Not Implemented")
+  func multipleParameter(request: Request, param1: String, param2: String) throws -> EventLoopFuture<MultipleParameterResponse> {
+    return request.future(MultipleParameterResponse(param1: param1, param2: param2))
   }
   
   func rootPath(request: Request) throws -> EventLoopFuture<HTTPStatus> {
