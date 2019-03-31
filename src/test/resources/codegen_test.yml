@@ -77,10 +77,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultipleParameterResponse'
-  /query/parsing:
+  /query/parameter:
     get:
-      operationId: queryParsing
-      tags: [Query Parsing]
+      operationId: queryParameters
+      tags: [Query Parameters]
       description: Query parameter test
       parameters:
         - in: query
@@ -98,6 +98,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryParametersResponse'
   /schema/referenced/object:
     get:
       operationId: referencedObject
@@ -154,4 +158,11 @@ components:
           type: string
         param2:
           type: string
-
+    QueryParametersResponse:
+      type: object
+      required: [param1]
+      properties:
+        param1:
+          type: string
+        param2:
+          type: integer
