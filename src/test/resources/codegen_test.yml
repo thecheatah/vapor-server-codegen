@@ -103,10 +103,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/QueryParametersResponse'
   /schema/referenced/object:
-    get:
+    post:
       operationId: referencedObject
       tags: [Data Model]
       description: Test data model support
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleObject'
       responses:
         '200':
           description: OK

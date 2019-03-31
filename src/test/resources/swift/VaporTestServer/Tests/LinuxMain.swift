@@ -4,5 +4,6 @@ import XCTest
 XCTMain([
   testCase(AppTests.allTests),
   testCase(PathParsingTests.allTests),
-  testCase(QueryParametersTests.allTests)
+  testCase(QueryParametersTests.allTests),
+  testCase(DataModelTests.allTests),
 ])
