@@ -19,7 +19,7 @@ final class DataModelTests: XCTestCase {
   }
   
   func testQueryOptionalParameters() throws {
-    let input = SimpleObject(simpleString: "Simple String", simpleNumber: 44.4, simpleInteger: 33, simpleDate: Date(), simpleEnumString: ._2)
+    let input = SimpleObject(simpleString: "Simple String", simpleNumber: 44.4, simpleInteger: 33, simpleDate: Date(), simpleEnumString: ._2, simpleBoolean: true, simpleArray: ["hello", "world"])
     let response = try app.sendRequest(to: "/schema/referenced/object", method: .POST, body: input) as Response
     XCTAssertEqual(response.http.status, HTTPStatus.ok, "/schema/referenced/object did not return a 200")
     XCTAssertNotNil(response.http.body.data, "/schema/referenced/object should not be nil")
@@ -31,6 +31,12 @@ final class DataModelTests: XCTestCase {
     let dateDifference = abs(input.simpleDate.timeIntervalSince(output.simpleDate))
     XCTAssert(dateDifference < 1.0, "/schema/referenced/object simpleDate difference was more then 1 second")
     XCTAssertEqual(input.simpleEnumString, output.simpleEnumString, "/schema/referenced/object simpleEnumString did not match")
+    XCTAssertEqual(input.simpleBoolean, output.simpleBoolean, "/schema/referenced/object simpleBoolean did not match")
+    //This should compare the individual elements in the arrays as well
+    XCTAssertEqual(input.simpleArray, output.simpleArray, "/schema/referenced/object simpleArray did not match")
+    XCTAssertEqual(input.simpleArray.count, output.simpleArray.count, "/schema/referenced/object simpleArray.count did not match")
+    XCTAssertEqual(input.simpleArray[0], output.simpleArray[0], "/schema/referenced/object simpleArray[0] did not match")
+    XCTAssertEqual(input.simpleArray[1], output.simpleArray[1], "/schema/referenced/object simpleArray[1] did not match")
   }
   
   static let allTests = [

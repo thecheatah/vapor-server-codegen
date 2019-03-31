@@ -142,9 +142,11 @@ components:
       type: string
       enum: [Value 1, Value 2]
       description: Enumerated string object
+    SimpleBoolean:
+      type: boolean
     SimpleObject:
       type: object
-      required: [simpleString, simpleNumber, simpleInteger, simpleDate, simpleEnumString]
+      required: [simpleString, simpleNumber, simpleInteger, simpleDate, simpleEnumString, simpleBoolean, simpleArray]
       properties:
         simpleString:
           $ref: '#/components/schemas/SimpleString'
@@ -156,6 +158,12 @@ components:
           $ref: '#/components/schemas/SimpleDate'
         simpleEnumString:
           $ref: '#/components/schemas/SimpleEnumString'
+        simpleBoolean:
+          $ref: '#/components/schemas/SimpleBoolean'
+        simpleArray:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleString'
     MultipleParameterResponse:
       type: object
       required: [param1, param2]
