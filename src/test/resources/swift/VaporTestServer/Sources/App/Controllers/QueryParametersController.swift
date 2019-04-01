@@ -9,7 +9,7 @@ import Vapor
 import VaporTestInterface
 
 class QueryParametersController: QueryParametersApiDelegate {
-  func queryParameters(request: Request, param1: String, param2: Int?) throws -> EventLoopFuture<QueryParametersResponse> {
-    return request.future(QueryParametersResponse(param1: param1, param2: param2))
+  func queryParameters(request: Request, param1: String, param2: Int?) throws -> EventLoopFuture<queryParametersResponse> {
+    return request.future(.http200(QueryParametersResponse(param1: param1, param2: param2)))
   }
 }

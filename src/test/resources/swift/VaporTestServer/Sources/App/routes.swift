@@ -16,5 +16,5 @@ public func routes(_ router: Router) throws {
     router.post("todos", use: todoController.create)
     router.delete("todos", Todo.parameter, use: todoController.delete)
     */
-  try VaporTestInterface.routes(router, dataModel: DataModelController(), pathParsing: PathParsingController(), queryParameters: QueryParametersController())
+  try VaporTestInterface.routes(router, dataModel: DataModelController(), multipleResponseCodes: MultipleResponseCodesController(), pathParsing: PathParsingController(), queryParameters: QueryParametersController())
 }

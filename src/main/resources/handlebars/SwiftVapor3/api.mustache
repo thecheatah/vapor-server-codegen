@@ -5,11 +5,52 @@
 // https://github.com/swagger-api/swagger-codegen
 // Template Input: {{importPath}}
 
+{{#operation}}
+public final class {{operationId}}Response: ResponseEncodable {
+
+  private let httpStatus: HTTPStatus
+{{#responses}}{{#dataType}}  private var http{{code}}Content: {{dataType}}?
+{{/dataType}}{{/responses}}
+
+  private init(httpStatus: HTTPStatus) {
+    self.httpStatus = httpStatus
+  }
+
+  public func encode(for request: Request) throws -> EventLoopFuture<Response> {
+    let response = request.response()
+    response.http.status = httpStatus
+
+    switch httpStatus {
+{{#responses}}{{#dataType}}      case HTTPStatus(statusCode: {{code}}):
+        try response.content.encode(http{{code}}Content!)
+{{/dataType}}{{^dataType}}      case HTTPStatus(statusCode: {{code}}):
+        break
+{{/dataType}}{{/responses}}
+      default:
+        throw HTTPError(identifier: "Unknown httpStatus", reason: "")
+    }
+
+    return Future.map(on: request) { response }
+  }
+
+{{#responses}}{{#dataType}}  public static func http{{code}}(_ content: {{dataType}}) -> Self {
+    let response = self.init(httpStatus: HTTPStatus(statusCode: {{code}}))
+    response.http{{code}}Content = content
+    return response
+  }
+{{/dataType}}{{^dataType}}  public static func http{{code}}() -> Self {
+    return self.init(httpStatus: HTTPStatus(statusCode: {{code}}))
+  }
+{{/dataType}}{{/responses}}
+}
+
+{{/operation}}
 public protocol {{classname}} {
 {{#operation}}{{#contents}}  /**
 	{{httpMethod}} {{{path}}}{{#notes}}
     {{{notes}}}{{/notes}} */
-    func {{operationId}}(request: Request{{#hasParams}}, {{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}HTTPStatus{{/returnType}}>
+    
+    func {{operationId}}(request: Request{{#hasParams}}, {{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{operationId}}Response>
 {{/contents}}{{/operation}}
 }
 {{/operations}}

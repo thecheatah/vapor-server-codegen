@@ -120,6 +120,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleObject'
+  /multiple/response/codes:
+    get:
+      operationId: multipleResponseCodes
+      tags: [Multiple Response Codes]
+      description: Test ability to support multiple response codes in a single call
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
 components:
   schemas:
     SimpleString:

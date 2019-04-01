@@ -9,7 +9,7 @@ import Vapor
 import VaporTestInterface
 
 class DataModelController: DataModelApiDelegate {
-  func referencedObject(request: Request, body: SimpleObject) throws -> Future<SimpleObject> {
-    return request.future(body)
+  func referencedObject(request: Request, body: SimpleObject) throws -> Future<referencedObjectResponse> {
+    return request.future(.http200(body))
   }
 }
