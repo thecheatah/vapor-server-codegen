@@ -129,7 +129,7 @@
             <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-cli</artifactId>
             <version>${swagger-codegen-version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.swagger.codegen.v3</groupId>
