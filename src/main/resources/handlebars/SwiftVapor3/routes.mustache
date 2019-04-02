@@ -36,8 +36,11 @@ public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{cl
   //for {{classVarName}}
 {{#operations}}{{#operation}}{{#contents}}
   router.on(.{{httpMethod}}, at: SwaggerPath(path: "{{path}}")) { request -> Future<{{operationId}}Response> in
-{{#queryParams}}
-    let {{paramName}} = try{{^required}}?{{/required}} request.query.get({{dataType}}.self, at: "{{paramName}}")
+{{#headerParams}}{{^items}}    if !request.http.headers.contains(name: "{{{baseName}}}") {
+      throw Abort(.badRequest, reason: "Missing header: {{{baseName}}}")
+    }
+{{/items}}    let {{paramName}} = request.http.headers["{{{baseName}}}"]{{^items}}[0]{{/items}}
+{{/headerParams}}{{#queryParams}}    let {{paramName}} = try{{^required}}?{{/required}} request.query.get({{dataType}}.self, at: "{{paramName}}")
 {{/queryParams}}{{#pathParams}}    let {{paramName}} = try request.parameters.next({{dataType}}.self)
 {{/pathParams}}{{#bodyParam}}    return try request.content.decode({{dataType}}.self).flatMap { body in
   {{/bodyParam}}

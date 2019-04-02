@@ -121,10 +121,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/SimpleObject'
   /multiple/response/codes:
-    get:
+    post:
       operationId: multipleResponseCodes
       tags: [Multiple Response Codes]
       description: Test ability to support multiple response codes in a single call
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipleResponseCodeRequest'
       responses:
         '200':
           description: OK
@@ -138,6 +144,33 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
+  /headers/in-request:
+    get:
+      operationId: requestHeaders
+      tags: [Headers]
+      description: Ability to read headers sent
+      parameters:
+        - in: header
+          name: x-example-required-header
+          required: true
+          schema:
+            type: string
+          description: Simple input header
+        - in: header
+          name: x-example-array-header
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          description: Simple input header
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestHeadersResponse'
 components:
   schemas:
     SimpleString:
@@ -198,3 +231,24 @@ components:
           type: string
         param2:
           type: integer
+    MultipleResponseCodeRequest:
+      type: object
+      required: [responseCode]
+      properties:
+        responseCode:
+          type: string
+          enum: [200, 201, 401, 500]
+    RequestHeadersResponse:
+      type: object
+      required: [requiredHeader]
+      properties:
+        requiredHeader:
+          type: string
+          description: Returns the required header that was sent
+        arrayHeader:
+          type: array
+          items:
+            type: string
+          description: Returns the array header that was sent
+          
+          

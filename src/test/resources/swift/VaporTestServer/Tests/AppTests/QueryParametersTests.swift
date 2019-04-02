@@ -18,6 +18,12 @@ final class QueryParametersTests: XCTestCase {
     super.tearDown()
   }
 
+  func testMissingParameter() throws {
+    let response = try app.sendRequest(to: "/query/parameter", method: .GET, body: EmptyBody()) as Response
+    XCTAssertEqual(response.http.status, HTTPStatus.badRequest, "/query/parameter did not return a 400")
+    XCTAssertNotNil(response.http.body.data, "/query/parameter should not be nil")
+  }
+  
   func testQueryParameters() throws {
     let response = try app.sendRequest(to: "/query/parameter?param1=String%20Value&param2=44", method: .GET, body: EmptyBody()) as Response
     XCTAssertEqual(response.http.status, HTTPStatus.ok, "/query/parameter did not return a 200")
@@ -37,6 +43,7 @@ final class QueryParametersTests: XCTestCase {
   }
 
   static let allTests = [
+    ("testMissingParameter", testMissingParameter),
     ("testQueryParameters", testQueryParameters),
     ("testQueryOptionalParameters", testQueryOptionalParameters),
   ]

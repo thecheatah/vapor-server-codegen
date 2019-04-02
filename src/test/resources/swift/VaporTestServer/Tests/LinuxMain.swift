@@ -6,4 +6,6 @@ XCTMain([
   testCase(PathParsingTests.allTests),
   testCase(QueryParametersTests.allTests),
   testCase(DataModelTests.allTests),
+  testCase(MultipleResponseCodesTests.allTests),
+  testCase(HeadersTests.allTests),
 ])

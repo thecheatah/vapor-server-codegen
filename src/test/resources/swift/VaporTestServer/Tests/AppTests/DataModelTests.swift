@@ -18,7 +18,7 @@ final class DataModelTests: XCTestCase {
     super.tearDown()
   }
   
-  func testQueryOptionalParameters() throws {
+  func testPayloadSendingAndRetrieval() throws {
     let input = SimpleObject(simpleString: "Simple String", simpleNumber: 44.4, simpleInteger: 33, simpleDate: Date(), simpleEnumString: ._2, simpleBoolean: true, simpleArray: ["hello", "world"])
     let response = try app.sendRequest(to: "/schema/referenced/object", method: .POST, body: input) as Response
     XCTAssertEqual(response.http.status, HTTPStatus.ok, "/schema/referenced/object did not return a 200")
@@ -40,6 +40,6 @@ final class DataModelTests: XCTestCase {
   }
   
   static let allTests = [
-    ("testQueryOptionalParameters", testQueryOptionalParameters),
+    ("testPayloadSendingAndRetrieval", testPayloadSendingAndRetrieval),
   ]
 }
