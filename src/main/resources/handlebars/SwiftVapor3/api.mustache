@@ -6,42 +6,21 @@
 // Template Input: {{importPath}}
 
 {{#operation}}
-public final class {{operationId}}Response: ResponseEncodable {
 
-  private let httpStatus: HTTPStatus
-{{#responses}}{{#dataType}}  private var http{{code}}Content: {{dataType}}?
-{{/dataType}}{{/responses}}
-
-  private init(httpStatus: HTTPStatus) {
-    self.httpStatus = httpStatus
-  }
+public enum {{operationId}}Response: ResponseEncodable {
+{{#responses}}  case http{{code}}{{#dataType}}({{dataType}}){{/dataType}}
+{{/responses}}
 
   public func encode(for request: Request) throws -> EventLoopFuture<Response> {
     let response = request.response()
-    response.http.status = httpStatus
-
-    switch httpStatus {
-{{#responses}}{{#dataType}}      case HTTPStatus(statusCode: {{code}}):
-        try response.content.encode(http{{code}}Content!)
-{{/dataType}}{{^dataType}}      case HTTPStatus(statusCode: {{code}}):
-        break
+    switch self {
+{{#responses}}    case .http{{code}}{{#dataType}}(let content){{/dataType}}:
+      response.http.status = HTTPStatus(statusCode: {{code}}){{#dataType}}
+      try response.content.encode(content)
 {{/dataType}}{{/responses}}
-      default:
-        throw HTTPError(identifier: "Unknown httpStatus", reason: "")
     }
-
     return Future.map(on: request) { response }
   }
-
-{{#responses}}{{#dataType}}  public static func http{{code}}(_ content: {{dataType}}) -> Self {
-    let response = self.init(httpStatus: HTTPStatus(statusCode: {{code}}))
-    response.http{{code}}Content = content
-    return response
-  }
-{{/dataType}}{{^dataType}}  public static func http{{code}}() -> Self {
-    return self.init(httpStatus: HTTPStatus(statusCode: {{code}}))
-  }
-{{/dataType}}{{/responses}}
 }
 
 {{/operation}}
