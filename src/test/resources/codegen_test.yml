@@ -171,6 +171,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RequestHeadersResponse'
+  /headers/in-response:
+    get:
+      operationId: responseHeaders
+      tags: [Headers]
+      responses:
+        '303':
+          description: See Other
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+              description: Example string header
 components:
   schemas:
     SimpleString:

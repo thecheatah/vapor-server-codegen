@@ -8,15 +8,18 @@
 {{#operation}}
 
 public enum {{operationId}}Response: ResponseEncodable {
-{{#responses}}  case http{{code}}{{#dataType}}({{dataType}}){{/dataType}}
+{{#responses}}  case http{{code}}{{#hasHeaders}}({{#headers}}{{name}}: {{datatype}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/headers}}){{/hasHeaders}}{{#dataType}}({{dataType}}){{/dataType}}
 {{/responses}}
 
   public func encode(for request: Request) throws -> EventLoopFuture<Response> {
     let response = request.response()
     switch self {
-{{#responses}}    case .http{{code}}{{#dataType}}(let content){{/dataType}}:
-      response.http.status = HTTPStatus(statusCode: {{code}}){{#dataType}}
-      try response.content.encode(content)
+{{#responses}}    case .http{{code}}{{#hasHeaders}}({{#headers}}let {{name}}{{#hasMore}}, {{/hasMore}}{{/headers}}){{/hasHeaders}}{{#dataType}}(let content){{/dataType}}:
+{{#hasHeaders}}{{#headers}}      if let {{name}} = {{name}} {
+        response.http.headers.add(name: "{{{baseName}}}", value: {{name}})
+      }
+{{/headers}}{{/hasHeaders}}      response.http.status = HTTPStatus(statusCode: {{code}})
+{{#dataType}}      try response.content.encode(content)
 {{/dataType}}{{/responses}}
     }
     return Future.map(on: request) { response }

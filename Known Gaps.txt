@@ -11,4 +11,8 @@ This issue is the result of the way that codegen generates the json for the must
 4. Enum types cannot be used as in arrays. They will not appear as enums, rather they will appear as strings
 This issue is the result of the way that codegen generates the json for the mustache template engine
 
-5. Optional headers must be implemented as array headers where the array is empty if no headers were sent
+5. Request optional headers must be implemented as array headers where the array is empty if no headers were sent
+
+6. Response only supports a single header being returned. There is a bug with the swagger-code parsers where the "hasMore" flag is not set to true correctly.
+
+7. Response headers cannot be marked as required. There is a bug with the code parser, that results in the required parameter not being set correctly.

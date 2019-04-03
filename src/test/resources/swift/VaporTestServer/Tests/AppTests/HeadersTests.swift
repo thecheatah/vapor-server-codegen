@@ -48,10 +48,18 @@ final class HeadersTests: XCTestCase {
     XCTAssertEqual(result.requiredHeader, "Example Header", "/headers/in-request requiredHeader was not of expected value: \"Example Header\"")
     XCTAssertEqual(result.arrayHeader!.count, 0, "/headers/in-request arrayHeader.count was not of expected value: 0")
   }
-  
+
+  func testResponseHeader() throws {
+    let headers = HTTPHeaders()
+    let response = try app.sendRequest(to: "/headers/in-response", method: .GET, headers: headers, body: EmptyBody()) as Response
+    XCTAssertEqual(response.http.status, HTTPStatus.seeOther, "/headers/in-response did not return a 303")
+    XCTAssertEqual(response.http.headers["location"][0], "https://chckt.com/login", "/headers/in-response did not return a location header with value: https://chckt.com/login")
+  }
+
   static let allTests = [
     ("testHeaderSetting", testHeaderSetting),
     ("testOptionalHeaderSetting",  testOptionalHeaderSetting),
-    ("testMissingRequiredHeader", testMissingRequiredHeader)
+    ("testMissingRequiredHeader", testMissingRequiredHeader),
+    ("testResponseHeader", testResponseHeader)
   ]
 }
