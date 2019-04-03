@@ -19,7 +19,7 @@ extension Application {
     return app
   }
 
-  func sendRequest<Body>(to path: String, method: HTTPMethod, headers: HTTPHeaders = .init(), body: Body?) throws -> Response where Body: Content {
+  func sendRequest<Body>(to path: String, method: HTTPMethod, headers: HTTPHeaders = .init(), body: Body?, bodyEncoding: MediaType = .json) throws -> Response where Body: Content {
     /*
     var headers = headers
     if isLoggedInRequest {
@@ -35,7 +35,7 @@ extension Application {
     let httpRequest = HTTPRequest(method: method, url: URL(string: path)!, headers: headers)
     let wrappedRequest = Request(http: httpRequest, using: self)
     if let body = body {
-      try wrappedRequest.content.encode(body)
+      try wrappedRequest.content.encode(body, as: bodyEncoding)
     }
     let responder = try make(Responder.self)
 //    print(wrappedRequest)

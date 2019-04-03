@@ -120,6 +120,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SimpleObject'
+  /form/request:
+    post:
+      operationId: formRequest
+      tags: [Form Data]
+      description: Test ability to parse form data
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SimpleObject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
   /multiple/response/codes:
     post:
       operationId: multipleResponseCodes
@@ -197,7 +215,7 @@ components:
     SimpleInteger:
       type: integer
       description: Simple Integer
-      example: 101.33
+      example: 45
     SimpleDate:
       type: string
       format: date-time

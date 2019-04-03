@@ -8,4 +8,5 @@ XCTMain([
   testCase(DataModelTests.allTests),
   testCase(MultipleResponseCodesTests.allTests),
   testCase(HeadersTests.allTests),
+  testCase(FormDataTests.allTests),
 ])

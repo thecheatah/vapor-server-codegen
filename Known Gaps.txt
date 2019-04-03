@@ -16,3 +16,4 @@ This issue is the result of the way that codegen generates the json for the must
 6. Response only supports a single header being returned. There is a bug with the swagger-code parsers where the "hasMore" flag is not set to true correctly.
 
 7. Response headers cannot be marked as required. There is a bug with the code parser, that results in the required parameter not being set correctly.
+
