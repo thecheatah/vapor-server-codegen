@@ -2,9 +2,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "VaporCodegenTest",
+    name: "VaporTestServer",
     products: [
-        .library(name: "VaporCodegenTest", targets: ["App"]),
+        .library(name: "VaporTestServer", targets: ["App"]),
         ],
     dependencies: [
         // 💧 A server-side Swift web framework.
@@ -12,7 +12,6 @@ let package = Package(
         
         // 🔵 Swift ORM (queries, models, relations, etc) built on SQLite 3.
         .package(url: "https://github.com/vapor/fluent-sqlite.git", from: "3.0.0"),
-//        .package(path: "../VaporTestInterface")
         .package(path: "../VaporTestInterface/")
     ],
     targets: [
