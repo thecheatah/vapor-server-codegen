@@ -149,7 +149,7 @@ Now you are ready for the edit, build, test cycle.
 3. Run codegen `src/test/resources/run_codegen.sh`
 3. Run the tests in swift using xcode or the commandline
 
-I mostly edited the mustache templates in this project. You can pipe the output of the out of the `run_codegen.sh` to a file. It's configured to dump the json payloads that are fed into the template engine. Each generated swift file has a template input line `Template Input: /APIs.FormData`. In the example template input line you can search for `/APIs.FormData` in the `run_codegen.sh` output and find the json payload.
+I mostly edited the mustache templates in this project. `run_codegen.sh` pipes the output by default to a file in the same directory called `codegen.out`. It's configured to dump the json payloads that are fed into the mustache template engine. Each generated swift file has a "Template Input" line like this: `Template Input: /APIs.FormData`. In the example template input line you can search for `/APIs.FormData` in the `codegen.out` file and find the json payload. I usually copy that subset of the json payload into Chrome/Safari/Firefox's developer console. For example I will do `var json = command+v` and then press up and type in `json` and hit enter. The browser's developer console will let you browse the json tree easily.
 
 ### Original Swagger Codegen Instructions
 
