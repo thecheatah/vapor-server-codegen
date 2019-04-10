@@ -32,7 +32,7 @@ public protocol {{classname}} {
 	{{httpMethod}} {{{path}}}{{#notes}}
     {{{notes}}}{{/notes}} */
     
-    func {{operationId}}(req: Request{{#hasParams}}, {{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{operationId}}Response>
+    func {{operationId}}(with req: Request{{#hasParams}}, {{#parameters}}{{paramName}}: {{dataType}}{{^required}}?{{/required}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}}) throws -> Future<{{operationId}}Response>
 {{/contents}}{{/operation}}
 }
 {{/operations}}

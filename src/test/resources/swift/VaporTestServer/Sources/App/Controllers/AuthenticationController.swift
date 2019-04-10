@@ -9,7 +9,7 @@ import Vapor
 import VaporTestInterface
 
 class AuthenticationController: AuthenticationApiDelegate {
-  func securityProtectedEndpoint(request: Request) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
-    return request.future(.http200)
+  func securityProtectedEndpoint(with req: Request) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
+    return req.future(.http200)
   }
 }

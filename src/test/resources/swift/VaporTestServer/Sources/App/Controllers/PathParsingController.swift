@@ -10,24 +10,24 @@ import VaporTestInterface
 
 class PathParsingController: PathParsingApiDelegate {
   
-  func multipleDepth(request: Request) throws -> EventLoopFuture<multipleDepthResponse> {
-    return request.future(multipleDepthResponse.http200)
+  func multipleDepth(with req: Request) throws -> EventLoopFuture<multipleDepthResponse> {
+    return req.future(multipleDepthResponse.http200)
   }
   
-  func multipleParameter(request: Request, param1: String, param2: String) throws -> EventLoopFuture<multipleParameterResponse> {
-    return request.future(.http200(MultipleParameterResponse(param1: param1, param2: param2)))
+  func multipleParameter(with req: Request, param1: String, param2: String) throws -> EventLoopFuture<multipleParameterResponse> {
+    return req.future(.http200(MultipleParameterResponse(param1: param1, param2: param2)))
   }
   
-  func rootPath(request: Request) throws -> EventLoopFuture<rootPathResponse> {
-    return request.future(.http200)
+  func rootPath(with req: Request) throws -> EventLoopFuture<rootPathResponse> {
+    return req.future(.http200)
   }
   
-  func singleDepth(request: Request) throws -> EventLoopFuture<singleDepthResponse> {
-    return request.future(.http200)
+  func singleDepth(with req: Request) throws -> EventLoopFuture<singleDepthResponse> {
+    return req.future(.http200)
   }
   
-  func singleParameter(request: Request, parameter: String) throws -> EventLoopFuture<singleParameterResponse> {
-    return request.future(.http200(parameter))
+  func singleParameter(with req: Request, parameter: String) throws -> EventLoopFuture<singleParameterResponse> {
+    return req.future(.http200(parameter))
   }
 }
 
