@@ -23,11 +23,11 @@ private class SwaggerPath: PathComponentsRepresentable {
   }
 }
 
-public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classname}}{{/apis}}{{/apiInfo}}) throws {
+public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classname}}{{/apis}}{{/apiInfo}}{{#authMethods}}, authFor{{{name}}}: Middleware{{/authMethods}}) throws {
 {{#apiInfo}}{{#apis}}
   //for {{classVarName}}
 {{#operations}}{{#operation}}{{#contents}}
-  router.on(.{{httpMethod}}, at: SwaggerPath(path: "{{path}}")) { request -> Future<{{operationId}}Response> in
+  router{{#authMethods}}.grouped([authFor{{{name}}}]){{/authMethods}}.on(.{{httpMethod}}, at: SwaggerPath(path: "{{path}}")) { request -> Future<{{operationId}}Response> in
 {{#formParams}}    let {{paramName}} = try request.content.syncGet(at: "{{baseName}}") as {{dataType}}
 {{/formParams}}{{#headerParams}}{{^items}}    if !request.http.headers.contains(name: "{{{baseName}}}") {
       throw Abort(.badRequest, reason: "Missing header: {{{baseName}}}")

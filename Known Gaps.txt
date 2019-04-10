@@ -17,3 +17,4 @@ This issue is the result of the way that codegen generates the json for the must
 
 7. Response headers cannot be marked as required. There is a bug with the code parser, that results in the required parameter not being set correctly.
 
+8. Does not support more then one authentication mechanism per endpoint.

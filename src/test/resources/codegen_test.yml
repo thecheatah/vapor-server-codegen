@@ -202,7 +202,20 @@ paths:
               schema:
                 type: string
               description: Example string header
+  /authentication/single:
+    get:
+      operationId: securityProtectedEndpoint
+      tags: [Authentication]
+      security: 
+        - Security1: []
+      responses:
+        '200':
+          description: OK
 components:
+  securitySchemes:
+    Security1:
+      type: http
+      scheme: basic
   schemas:
     SimpleString:
       type: string
