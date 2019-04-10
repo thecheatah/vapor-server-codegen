@@ -23,14 +23,6 @@ private class SwaggerPath: PathComponentsRepresentable {
   }
 }
 
-public class MultipleHTTPStatusResponse {
-	init(httpStatus: HTTPStatus) {
-	}
-
-	init(httpStatus: HTTPStatus, content: AnyObject) {
-	}
-}
-
 public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classname}}{{/apis}}{{/apiInfo}}) throws {
 {{#apiInfo}}{{#apis}}
   //for {{classVarName}}
