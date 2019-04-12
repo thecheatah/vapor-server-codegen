@@ -9,6 +9,7 @@ import Vapor
 import VaporTestInterface
 
 class MultipleResponseCodesController: MultipleResponseCodesApiDelegate {
+  typealias AuthType = SampleAuthType
   func multipleResponseCodes(with req: Request, body: MultipleResponseCodeRequest) throws -> EventLoopFuture<multipleResponseCodesResponse> {
     switch body.responseCode {
     case MultipleResponseCodeRequest.ResponseCode._200:

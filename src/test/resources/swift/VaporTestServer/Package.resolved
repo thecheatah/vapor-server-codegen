@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Auth",
+        "repositoryURL": "https://github.com/vapor/auth.git",
+        "state": {
+          "branch": null,
+          "revision": "ed402783942af1d40b5c9e537e956aea51618f0e",
+          "version": "2.0.3"
+        }
+      },
+      {
         "package": "Console",
         "repositoryURL": "https://github.com/vapor/console.git",
         "state": {

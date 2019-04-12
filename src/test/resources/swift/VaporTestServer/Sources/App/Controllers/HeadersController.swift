@@ -9,6 +9,8 @@ import Vapor
 import VaporTestInterface
 
 class HeadersController: HeadersApiDelegate {
+  typealias AuthType = SampleAuthType
+
   func responseHeaders(with req: Request) throws -> EventLoopFuture<responseHeadersResponse> {
     return req.future(.http303(location: "https://chckt.com/login"))
   }

@@ -211,6 +211,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityProtectedEndpointResponse'
 components:
   securitySchemes:
     Security1:
@@ -294,5 +298,11 @@ components:
           items:
             type: string
           description: Returns the array header that was sent
+    SecurityProtectedEndpointResponse:
+      type: object
+      required: [secret]
+      properties:
+        secret:
+          type: string
           
           

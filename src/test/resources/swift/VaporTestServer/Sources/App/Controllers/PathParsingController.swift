@@ -9,7 +9,8 @@ import Vapor
 import VaporTestInterface
 
 class PathParsingController: PathParsingApiDelegate {
-  
+  typealias AuthType = SampleAuthType
+
   func multipleDepth(with req: Request) throws -> EventLoopFuture<multipleDepthResponse> {
     return req.future(multipleDepthResponse.http200)
   }
