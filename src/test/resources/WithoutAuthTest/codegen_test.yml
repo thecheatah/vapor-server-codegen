@@ -1,0 +1,285 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Swift Vapor 3 Codegen Test
+  description: Used to test the codegen
+servers: 
+  - url: https://vapor.codegen/
+    description: Test Server
+paths:
+  /:
+    get:
+      operationId: rootPath
+      tags: [Path Parsing]
+      description: Test the ability to route the root path
+      responses:
+        '200':
+          description: OK
+  /path-single-depth:
+    get:
+      operationId: singleDepth
+      tags: [Path Parsing]
+      description: Test ability to parse single depth
+      responses:
+        '200':
+          description: OK
+  /path/multiple/depth:
+    get:
+      operationId: multipleDepth
+      tags: [Path Parsing]
+      description: Test ability to parse multiple depth
+      responses:
+        '200':
+          description: OK
+  /path/{parameter}:
+    get:
+      operationId: singleParameter
+      tags: [Path Parsing]
+      description: Test ability to intake single parameter
+      parameters:
+        - in: path
+          name: parameter
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+          content:
+            applicatin/json:
+              schema:
+                type: string
+                example: parameter
+                description: Returns the parameter value
+  /path/{param1}/and/{param2}:
+    get:
+      operationId: multipleParameter
+      tags: [Path Parsing]
+      description: Test ability to intake single parameter
+      parameters:
+        - in: path
+          name: param1
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+        - in: path
+          name: param2
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultipleParameterResponse'
+  /query/parameter:
+    get:
+      operationId: queryParameters
+      tags: [Query Parameters]
+      description: Query parameter test
+      parameters:
+        - in: query
+          name: param1
+          required: true
+          schema:
+            type: string
+          description: Simple input string
+        - in: query
+          name: param2
+          required: false
+          schema:
+            type: integer
+          description: Simple input string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryParametersResponse'
+  /schema/referenced/object:
+    post:
+      operationId: referencedObject
+      tags: [Data Model]
+      description: Test data model support
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleObject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
+  /form/request:
+    post:
+      operationId: formRequest
+      tags: [Form Data]
+      description: Test ability to parse form data
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SimpleObject'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
+  /multiple/response/codes:
+    post:
+      operationId: multipleResponseCodes
+      tags: [Multiple Response Codes]
+      description: Test ability to support multiple response codes in a single call
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultipleResponseCodeRequest'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleObject'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+  /headers/in-request:
+    get:
+      operationId: requestHeaders
+      tags: [Headers]
+      description: Ability to read headers sent
+      parameters:
+        - in: header
+          name: x-example-required-header
+          required: true
+          schema:
+            type: string
+          description: Simple input header
+        - in: header
+          name: x-example-array-header
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+          description: Simple input header
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestHeadersResponse'
+  /headers/in-response:
+    get:
+      operationId: responseHeaders
+      tags: [Headers]
+      responses:
+        '303':
+          description: See Other
+          headers:
+            location:
+              required: true
+              schema:
+                type: string
+              description: Example string header
+components:
+  schemas:
+    SimpleString:
+      type: string
+      description: Simple String
+      example: "I am a simple string"
+    SimpleNumber:
+      type: number
+      description: Simple Number
+      example: 101.33
+    SimpleInteger:
+      type: integer
+      description: Simple Integer
+      example: 45
+    SimpleDate:
+      type: string
+      format: date-time
+      example: "1995-09-07T10:40:52.123Z"
+    SimpleEnumString:
+      type: string
+      enum: [Value 1, Value 2]
+      description: Enumerated string object
+    SimpleBoolean:
+      type: boolean
+    SimpleObject:
+      type: object
+      required: [simpleString, simpleNumber, simpleInteger, simpleDate, simpleEnumString, simpleBoolean, simpleArray]
+      properties:
+        simpleString:
+          $ref: '#/components/schemas/SimpleString'
+        simpleNumber:
+          $ref: '#/components/schemas/SimpleNumber'
+        simpleInteger:
+          $ref: '#/components/schemas/SimpleInteger'
+        simpleDate:
+          $ref: '#/components/schemas/SimpleDate'
+        simpleEnumString:
+          $ref: '#/components/schemas/SimpleEnumString'
+        simpleBoolean:
+          $ref: '#/components/schemas/SimpleBoolean'
+        simpleArray:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleString'
+    MultipleParameterResponse:
+      type: object
+      required: [param1, param2]
+      properties:
+        param1:
+          type: string
+        param2:
+          type: string
+    QueryParametersResponse:
+      type: object
+      required: [param1]
+      properties:
+        param1:
+          type: string
+        param2:
+          type: integer
+    MultipleResponseCodeRequest:
+      type: object
+      required: [responseCode]
+      properties:
+        responseCode:
+          type: string
+          enum: [200, 201, 401, 500]
+    RequestHeadersResponse:
+      type: object
+      required: [requiredHeader]
+      properties:
+        requiredHeader:
+          type: string
+          description: Returns the required header that was sent
+        arrayHeader:
+          type: array
+          items:
+            type: string
+          description: Returns the array header that was sent
+          
+          

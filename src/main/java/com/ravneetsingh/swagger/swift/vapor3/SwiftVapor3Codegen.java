@@ -48,4 +48,11 @@ public class SwiftVapor3Codegen extends Swift4Codegen {
   public SwiftVapor3Codegen() {
 	  super();
   }
+  
+  public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+    return super.postProcessOperations(objs);
+  }
+  public Map<String, Object> postProcessOperationsWithModels(Map<String, Object> objs, List<Object> allModels) {
+    return super.postProcessOperationsWithModels(objs, allModels);
+  }
 }

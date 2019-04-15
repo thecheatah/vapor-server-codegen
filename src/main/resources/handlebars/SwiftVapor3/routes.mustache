@@ -30,15 +30,14 @@ public protocol AuthenticationMiddleware: Middleware {
   func authType() -> AuthType.Type
 }
 
-{{#hasAuthMethods}}
+//Used when auth is not used
+public class DummyAuthType: Authenticatable {}
+
 public func routes<{{#authMethods}}authFor{{{name}}}: AuthenticationMiddleware, {{/authMethods}}{{#apiInfo}}{{#apis}}{{classVarName}}: {{classname}}{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}>
   (_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classVarName}}{{/apis}}{{/apiInfo}}{{#authMethods}}, authFor{{{name}}}: authFor{{{name}}}{{/authMethods}})
   throws
-  where {{#authMethods}}{{#apiInfo}}{{#apis}}authFor{{{name}}}.AuthType == {{classVarName}}.AuthType{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}{{/authMethods}}
+  where {{#hasAuthMethods}}{{#authMethods}}{{#apiInfo}}{{#apis}}authFor{{{name}}}.AuthType == {{classVarName}}.AuthType{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}{{/authMethods}}{{/hasAuthMethods}}{{^hasAuthMethods}}{{#apiInfo}}{{#apis}}{{classVarName}}.AuthType == DummyAuthType.Type{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}{{/hasAuthMethods}}
   {
-{{/hasAuthMethods}}{{^hasAuthMethods}}
-public func routes(_ router: Router{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classname}}{{/apis}}{{/apiInfo}}{{#authMethods}}, authFor{{{name}}}: Middleware{{/authMethods}}) throws {
-{{/hasAuthMethods}}
 {{#authMethods}}  let routerFor{{{name}}} = router.grouped([authFor{{{name}}}])
 {{/authMethods}}{{#apiInfo}}{{#apis}}
   //for {{classVarName}}
