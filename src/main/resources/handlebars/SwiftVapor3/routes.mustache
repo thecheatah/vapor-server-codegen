@@ -52,7 +52,7 @@ public func routes<{{#authMethods}}authFor{{{name}}}: AuthenticationMiddleware, 
 {{/queryParams}}{{#pathParams}}    let {{paramName}} = try request.parameters.next({{dataType}}.self)
 {{/pathParams}}{{#bodyParam}}    return try request.content.decode({{dataType}}.self).flatMap { body in
   {{/bodyParam}}
-    return try {{classVarName}}.{{operationId}}(with: request{{#hasAuthMethods}}{{#authMethods}}, from: request.requireAuthenticated(authFor{{{name}}}.authType()){{/authMethods}}{{/hasAuthMethods}}{{#hasParams}}, {{#parameters}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}})
+    return try {{classVarName}}.{{operationId}}(with: request{{#hasAuthMethods}}{{#authMethods}}, as: request.requireAuthenticated(authFor{{{name}}}.authType()){{/authMethods}}{{/hasAuthMethods}}{{#hasParams}}, {{#parameters}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/parameters}}{{/hasParams}})
 {{#bodyParam}}  	}
 {{/bodyParam}}
   }
