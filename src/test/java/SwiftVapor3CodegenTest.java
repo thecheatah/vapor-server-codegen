@@ -27,7 +27,7 @@ public class SwiftVapor3CodegenTest {
     Process p = pb.start();
     int result = p.waitFor();
 
-    System.out.println(result);
+    System.out.println("Exit Value: " + result);
     Assert.assertEquals(result, 0);
   }
 
@@ -48,7 +48,7 @@ public class SwiftVapor3CodegenTest {
     Process p = pb.start();
     int result = p.waitFor();
 
-    System.out.println(result);
+    System.out.println("Exit Value: " + result);
     Assert.assertEquals(result, 0);
   }
 }
