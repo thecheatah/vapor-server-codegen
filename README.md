@@ -45,8 +45,8 @@ The auto-generated package will contain 3 key directories:
 |-- {Package Name}
 |--- routes.swift
 |--- APIs
-|---- {Swagger Tag 1}ApiDelegates.swift
-|---- {Swagger Tag 2}ApiDelegates.swift
+|---- {Swagger Tag 1}ApiDelegate.swift
+|---- {Swagger Tag 2}ApiDelegate.swift
 |--- Models
 |---- {Swagger Model 1}.swift
 |---- {Swagger Model 2}.swift
@@ -84,7 +84,7 @@ In the example above the generated package is `VaporTestInterface` and is locate
 
 ### 2. Implement API by creating Controllers
 
-Next, you will need to create controller classes for each of the APIs defined within the swagger. Each controller class will need to implement the specific API's interface as defined within the generated package.
+Next, you will need to create controller classes for each of the APIs defined within the swagger. The swagger-codegen defaults to generating an API for each tag used in swagger spec. Each controller class will need to implement the specific API's interface as defined within the generated package.
 
 ```swift
 import Vapor
@@ -98,6 +98,235 @@ class DataModelController: DataModelApiDelegate {
 ```
 
 In the example above the `DataModelController` class is in a file within your project. `DataModelApiDelegate` is from the auto-generated package `VaporTestInterface`.
+
+Required flags are respected and determines if a field is optional or not.
+
+#### 2.1 Response Codes in Controllers
+
+The generated interface is designed to handle HTTP response codes by building an enum for each possible response code. The enum is parameterized to take in the payload to be returned for each response code.
+
+```swift
+public enum multipleResponseCodesResponse: ResponseEncodable {
+  case http200
+  case http201(SimpleObject)
+  case http401
+  case http500
+
+  public func encode(for request: Request) throws -> EventLoopFuture<Response> {
+    let response = request.response()
+    switch self {
+    case .http200:
+      response.http.status = HTTPStatus(statusCode: 200)
+    case .http201(let content):
+      response.http.status = HTTPStatus(statusCode: 201)
+      try response.content.encode(content)
+    case .http401:
+      response.http.status = HTTPStatus(statusCode: 401)
+    case .http500:
+      response.http.status = HTTPStatus(statusCode: 500)
+    }
+    return Future.map(on: request) { response }
+  }
+}
+```
+
+Here are examples of returning various response codes:
+
+```swift
+func multipleResponseCodes(with req: Request, body: MultipleResponseCodeRequest) throws -> EventLoopFuture<multipleResponseCodesResponse> {
+  switch body.responseCode {
+  case MultipleResponseCodeRequest.ResponseCode._200:
+    return req.future(.http200)
+  case MultipleResponseCodeRequest.ResponseCode._201:
+    return req.future(.http201(SimpleObject(simpleString: "Simple String", simpleNumber: 44.22, simpleInteger: 44, simpleDate: Date(), simpleEnumString: ._1, simpleBoolean: false, simpleArray: ["Hi!"])))
+  case MultipleResponseCodeRequest.ResponseCode._401:
+    return req.future(.http401)
+  case MultipleResponseCodeRequest.ResponseCode._500:
+    return req.future(.http500)
+  }
+}
+```
+
+#### 2.2 Body in Controllers
+
+A POST/PATCH/etc. request and a response body will map to an API interface as such:
+
+```swift
+func referencedObject(with req: Request, body: SimpleObject) throws -> Future<referencedObjectResponse> {
+  return req.future(.http200(body))
+}
+```
+
+This library is designed to only handle json responses. The swagger spec supports multiple response types and the "enum" approach could be extended to handle multiple response types. It's not something that is currently supported.
+
+#### 2.3 GET Parameters in Controllers
+
+GET parameters map to function parameters within a controller. In the example below param1 and param2 are get parameters like ?param1=string&param2=44
+
+```swift
+func queryParameters(with req: Request, param1: String, param2: Int?) throws -> EventLoopFuture<queryParametersResponse> {
+  return req.future(.http200(QueryParametersResponse(param1: param1, param2: param2)))
+}
+```
+
+#### 2.4 Path Parameters in Controllers
+
+Parameters within a path are always handled as strings. The /path/{param1}/and/{param2} path parameters will generate the following:
+
+```swift
+func multipleParameter(with req: Request, param1: String, param2: String) throws -> EventLoopFuture<multipleParameterResponse> {
+  return req.future(.http200(MultipleParameterResponse(param1: param1, param2: param2)))
+}
+```
+
+#### 2.5 Headers in Controllers
+
+Headers from requests and responses will generate an interface like this:
+
+```swift
+class HeadersController: HeadersApiDelegate {
+  typealias AuthType = SampleAuthType
+
+  func responseHeaders(with req: Request) throws -> EventLoopFuture<responseHeadersResponse> {
+    return req.future(.http303(location: "https://chckt.com/login"))
+  }
+  
+  func requestHeaders(with req: Request, xExampleRequiredHeader: String, xExampleArrayHeader: [String]) throws -> EventLoopFuture<requestHeadersResponse> {
+    return req.future(.http200(RequestHeadersResponse(requiredHeader: xExampleRequiredHeader, arrayHeader: xExampleArrayHeader)))
+  }
+}
+```
+
+#### 2.6 Form Parameters in Controllers
+
+The swagger-codegen library flattens the first level of the data model representing the form parameters.
+
+```YAML
+    SimpleObject:
+      type: object
+      required: [simpleString, simpleNumber, simpleInteger, simpleDate, simpleEnumString, simpleBoolean, simpleArray]
+      properties:
+        simpleString:
+          $ref: '#/components/schemas/SimpleString'
+        simpleNumber:
+          $ref: '#/components/schemas/SimpleNumber'
+        simpleInteger:
+          $ref: '#/components/schemas/SimpleInteger'
+        simpleDate:
+          $ref: '#/components/schemas/SimpleDate'
+        simpleEnumString:
+          $ref: '#/components/schemas/SimpleEnumString'
+        simpleBoolean:
+          $ref: '#/components/schemas/SimpleBoolean'
+        simpleArray:
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleString'
+```
+
+Would map to:
+
+```swift
+func formRequest(with req: Request, simpleString: SimpleString, simpleNumber: SimpleNumber, simpleInteger: SimpleInteger, simpleDate: SimpleDate, simpleEnumString: SimpleEnumString, simpleBoolean: SimpleBoolean, simpleArray: [SimpleString]) throws -> EventLoopFuture<formRequestResponse> {
+  return req.future(.http200(SimpleObject(simpleString: simpleString, simpleNumber: simpleNumber, simpleInteger: simpleInteger, simpleDate: simpleDate, simpleEnumString: simpleEnumString, simpleBoolean: simpleBoolean, simpleArray: simpleArray)))
+}
+```
+
+#### 2.7 Authentication in Controllers
+
+Due to the limitation of how the codegen represents swagger and how I wanted to generate the interface, this generator can only handle one authentication mechanism per endpoint.
+
+If multiple authentication mechanisms are used, a single endpoint can only handle one authentication mechanism, but different endpoints can handle different authentication mechanisms. The "AuthType" object type set from the multiple authentication mechanisms must be the same. This library uses generics to enforce that.
+
+Here is an example interface from the test suite. The "as" parameter will contain the object authenticated by the authenticator.
+
+```swift
+class AuthenticationController: AuthenticationApiDelegate {
+  typealias AuthType = SampleAuthType
+
+  func securityProtectedEndpoint(with req: Request, as from: SampleAuthType) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
+    return req.future(.http200(SecurityProtectedEndpointResponse(secret: from.secret)))
+  }
+}
+```
+
+The authenticator is a Vapor Middleware, but needs to extend AuthenticationMiddleware from the generated library. The interface for AuthenticationMiddleware is as follows:
+
+```swift
+public protocol AuthenticationMiddleware: Middleware {
+  associatedtype AuthType: Authenticatable
+  func authType() -> AuthType.Type
+}
+```
+
+Here is an example authentication middleware:
+
+```swift
+import Vapor
+import Authentication
+import VaporTestInterface
+
+struct SampleAuthType: Authenticatable {
+  let secret: String
+}
+
+class SecurityMiddleware: AuthenticationMiddleware {
+  typealias AuthType = SampleAuthType
+  
+  func authType() -> SampleAuthType.Type {
+    return SampleAuthType.self
+  }
+
+  func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
+    guard let bearer = request.http.headers.bearerAuthorization else {
+      throw Abort(.unauthorized)
+    }
+    if bearer.token != "Secret" {
+      throw Abort(.unauthorized)
+    }
+    try request.authenticate(SampleAuthType(secret: bearer.token))
+    return try next.respond(to: request)
+  }
+}
+```
+
+In the example above, note that the middleware sets `try request.authenticate(SampleAuthType(secret: bearer.token))` where the authenticated object is the same type `SampleAuthType` as `typealias AuthType = SampleAuthType`. 
+
+The authentication middleware needs to be passed in the generated interface's `routes` method as a parameter.
+
+This is the generated routes interface from the test suite. You don't need to understand what it does, but know that it uses generics to map the `AuthType` returned from the authenticator to the `AuthType`.
+
+```swift
+public func routes<authForSecurity1: AuthenticationMiddleware, authentication: AuthenticationApiDelegate, dataModel: DataModelApiDelegate, formData: FormDataApiDelegate, headers: HeadersApiDelegate, multipleResponseCodes: MultipleResponseCodesApiDelegate, pathParsing: PathParsingApiDelegate, queryParameters: QueryParametersApiDelegate>
+  (_ router: Router, authentication: authentication, dataModel: dataModel, formData: formData, headers: headers, multipleResponseCodes: multipleResponseCodes, pathParsing: pathParsing, queryParameters: queryParameters, authForSecurity1: authForSecurity1)
+  throws
+  where authForSecurity1.AuthType == authentication.AuthType, authForSecurity1.AuthType == dataModel.AuthType, authForSecurity1.AuthType == formData.AuthType, authForSecurity1.AuthType == headers.AuthType, authForSecurity1.AuthType == multipleResponseCodes.AuthType, authForSecurity1.AuthType == pathParsing.AuthType, authForSecurity1.AuthType == queryParameters.AuthType
+```
+
+The first parameter in the `routes` will be the `Router` from the Vapor library, the next set of parameters will be the Controllers implementing the delegates followed by the authenticator.
+
+##### 2.7.1 Controllers without Authentication
+
+When generating the API delegate, the swagger library does not pass in the authentication schemes used by the API's operations and the mustache template engine does not allow one to aggregate the authentication schemes used within an API's operations. Thus, this library, regardless if authentication is used within the swagger or not, will generate a `associatedtype AuthType` in the generated API protocol. A default `DummyAuthType` is provided that needs to be set on a controller whose operations do not use an authentication.
+
+Here is what the DummyAuthType looks like:
+```swift
+//Used when auth is not used
+public class DummyAuthType: Authenticatable {}
+```
+
+Here is an example of a Controller setting the dummy auth type:
+```swift
+class DataModelController: DataModelApiDelegate {
+  typealias AuthType = DummyAuthType.Type
+
+  func referencedObject(with req: Request, body: SimpleObject) throws -> Future<referencedObjectResponse> {
+    return req.future(.http200(body))
+  }
+}
+```
+
+If any of the controllers uses an authentication mechanism, all other controllers must set the `AuthType` to the same. The authentication mechanism must also set the same auth type object.
 
 ### 3. Configure the router
 
@@ -122,8 +351,11 @@ Once you can see that the java project works, you should configure the swift pro
 In the root of the project run the following commands:
 
 ```shell
-cd test/resources/swift
-ln -s ../../../../target/test-classes/swift/VaporTestInterface ./
+cd test/resources/AllTest
+ln -s ../../../../target/test-classes/AllTest/VaporTestInterface ./
+cd ../../..
+cd test/resources/WithoutAuthTest
+ln -s ../../../../target/test-classes/WithoutAuthTest/VaporTestInterface ./
 cd ../../..
 ```
 The java tests build `VaporTestInterface` under `target/test-classes/swift/`. If you link it like this, you can run the xcode tests right from the xcode test project.
