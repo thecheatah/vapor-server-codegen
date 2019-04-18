@@ -215,9 +215,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SecurityProtectedEndpointResponse'
+  /authentication/another:
+    get:
+      operationId: anotherSecurityProtectedEndpoint
+      tags: [Authentication]
+      security: 
+        - Security2: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityProtectedEndpointResponse'
+  /authentication-another/single:
+    get:
+      operationId: anotherApiSecurityProtectedEndpoint
+      tags: [Another Authentication]
+      security: 
+        - Security1: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityProtectedEndpointResponse'
+  /authentication-another/another:
+    get:
+      operationId: anotherApiAnotherSecurityProtectedEndpoint
+      tags: [Another Authentication]
+      security: 
+        - Security2: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityProtectedEndpointResponse'
 components:
   securitySchemes:
     Security1:
+      type: http
+      scheme: basic
+    Security2:
       type: http
       scheme: basic
   schemas:
@@ -300,9 +342,12 @@ components:
           description: Returns the array header that was sent
     SecurityProtectedEndpointResponse:
       type: object
-      required: [secret]
+      required: [secret, securedBy]
       properties:
         secret:
           type: string
-          
+        securedBy:
+          type: string
+          enum: [Security1, Security2]
+
           
