@@ -188,7 +188,7 @@ class HeadersController: HeadersApiDelegate {
   typealias AuthType = SampleAuthType
 
   func responseHeaders(with req: Request) throws -> EventLoopFuture<responseHeadersResponse> {
-    return req.future(.http303(location: "https://chckt.com/login"))
+    return req.future(.http303(location: "https://example.com/login"))
   }
   
   func requestHeaders(with req: Request, xExampleRequiredHeader: String, xExampleArrayHeader: [String]) throws -> EventLoopFuture<requestHeadersResponse> {
@@ -396,7 +396,7 @@ At this point, you've likely generated a client setup.  It will include somethin
 |-- src
 |--- main
 |---- java
-|----- com.chckt.swagger.swift.vapor3.Swiftvapor3Generator.java // generator file
+|----- com.ravneetsingh.swagger.swift.vapor3.Swiftvapor3Generator.java // generator file
 |---- resources
 |----- SwiftVapor3 // template files
 |----- META-INF
