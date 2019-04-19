@@ -238,13 +238,13 @@ Due to the limitation of how the codegen represents swagger and how I wanted to 
 
 If multiple authentication mechanisms are used, a single endpoint can only handle one authentication mechanism, but different endpoints can handle different authentication mechanisms. The "AuthType" object type set from the multiple authentication mechanisms must be the same. This library uses generics to enforce that.
 
-Here is an example interface from the test suite. The "as" parameter will contain the object authenticated by the authenticator.
+Here is an example interface from the test suite. The `user` parameter will contain the object authenticated by the authenticator.
 
 ```swift
 class AuthenticationController: AuthenticationApiDelegate {
   typealias AuthType = SampleAuthType
 
-  func securityProtectedEndpoint(with req: Request, as from: SampleAuthType) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
+  func securityProtectedEndpoint(with req: Request, asAuthenticated user: SampleAuthType) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
     return req.future(.http200(SecurityProtectedEndpointResponse(secret: from.secret)))
   }
 }
