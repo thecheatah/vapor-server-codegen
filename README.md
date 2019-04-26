@@ -11,7 +11,7 @@ I hope that you find this project to be useful. I would like to see server side 
 
 Let me know if you run into issues with this project or its documentation. Help is welcome!
 
-[Known Gaps](Known Gaps.md) were identified by the tests included in this project.
+[Known Gaps](./Known%20Gaps.md) were identified by the tests included in this project.
 
 ## How do I build this project?
 
