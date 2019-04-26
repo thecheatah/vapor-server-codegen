@@ -11,6 +11,8 @@ I hope that you find this project to be useful. I would like to see server side 
 
 Let me know if you run into issues with this project or its documentation. Help is welcome!
 
+[Known Gaps](Known Gaps.md) were identified by the tests included in this project.
+
 ## How do I build this project?
 
 As of now, you must generate your own jar file. Check out or download the complete source.
