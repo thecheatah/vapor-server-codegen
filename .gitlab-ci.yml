@@ -1,0 +1,19 @@
+stages:
+- build
+
+variables:
+  DOCKER_IMAGE: synology:5350/swagger-codegen/swift/vapor-server-codegen
+  CODE_GEN_CLI_VERSION: 3.0.14
+
+Build Docker Image:
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - mvn package
+    - mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get -DrepoUrl=http://download.java.net/maven/2/ -Dartifact=io.swagger.codegen.v3:swagger-codegen-cli:$CODE_GEN_CLI_VERSION
+    - cp ~/.m2/repository/io/swagger/codegen/v3/swagger-codegen-cli/$CODE_GEN_CLI_VERSION/swagger-codegen-cli-$CODE_GEN_CLI_VERSION.jar target
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  interruptible: true
+  tags: [docker-host, mvn]
