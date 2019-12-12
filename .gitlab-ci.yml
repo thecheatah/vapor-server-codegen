@@ -36,6 +36,12 @@ Integration Tests:
     - docker run --rm -v "$(pwd):/output" $INTEGRATION_DOCKER_IMAGE -i codegen_test.yml -o ./VaporTestInterface --additional-properties projectName=VaporTestInterface
     - cd VaporTestServer
     - swift test
+  cache:
+    key: DeviceLocatoriOSApp
+    untracked: true
+    paths:
+      - src/test/resources/AllTest/VaporTestServer/.build
+      - src/test/resources/WithoutAuthTest/VaporTestServer/.build
   interruptible: true
   tags: [docker-host, xcode]
 
