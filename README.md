@@ -1,3 +1,11 @@
+# Docker Usage
+
+Docker image is expected to mount the current working directry to the container's `/output` directory. You can run the codegen using the following:
+
+```
+docker run --rm -v "$(pwd):/output" synology:5350/swagger-codegen/swift/vapor-server-codegen -i api.yaml -o ./output --additional-properties projectName=DeviceLocatorServiceAPI2
+```
+
 # Swagger Codegen for the SwiftVapor3 framework
 
 ## Overview
