@@ -1,11 +1,3 @@
-# Docker Usage
-
-Docker image is expected to mount the current working directry to the container's `/output` directory. You can run the codegen using the following:
-
-```
-docker run --rm -v "$(pwd):/output" synology:5350/swagger-codegen/swift/vapor-server-codegen -i api.yaml -o ./output --additional-properties projectName=DeviceLocatorServiceAPI2
-```
-
 # Swagger Codegen for the SwiftVapor3 framework
 
 ## Overview
@@ -20,6 +12,45 @@ I hope that you find this project to be useful. I would like to see server side 
 Let me know if you run into issues with this project or its documentation. Help is welcome!
 
 [Known Gaps](./Known%20Gaps.md) were identified by the tests included in this project.
+
+## Get Started Quickly using a Docker Image
+
+I manage a [docker image](https://hub.docker.com/r/thecheatah/vapor-server-codegen) to simplify the codegen process.
+
+Docker image is expected to mount the current working directry to the container's `/output` directory. You can run the codegen using the following:
+
+```sh
+docker run --rm -v "$(pwd):/output" docker push thecheatah/vapor-server-codegen:3.0 -i api.yaml -o ./output --additional-properties projectName=MyProjectAPI
+```
+
+You can structure your directory like this:
+```
+|- MyProjectAPI
+|-- build.sh
+|-- api.yaml
+```
+
+`build.sh` can contain the following:
+```sh
+#!/bin/sh
+docker run --rm -v "$(pwd):/output" docker push thecheatah/vapor-server-codegen:3.0 -i api.yaml -o . --additional-properties projectName=MyProjectAPI
+```
+
+Running `build.sh` will create a swiftpm compatible package within the `MyProjectAPI` directory. You can commit this package and reference it from you Vapor Server using swiftpm.
+
+```
+|- MyProjectAPI
+|-- build.sh
+|-- api.yaml
+|-- Package.swift
+|-- Sources
+|--- MyProjectAPI
+|---- APIs
+|----- etc.
+|---- Models
+|----- etc.
+|---- routes.swift
+```
 
 ## How do I build this project?
 
