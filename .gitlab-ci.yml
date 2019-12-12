@@ -38,14 +38,14 @@ Integration Tests:
   interruptible: true
   tags: [docker-host, xcode]
 
-  Push Docker Image:
-    stage: package
-    before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker pull $INTEGRATION_DOCKER_IMAGE
-    script:
-    - docker tag $INTEGRATION_DOCKER_IMAGE $RELEASE_DOCKER_IMAGE
-    - docker push $RELEASE_DOCKER_IMAGE
-  interruptible: true
-  tags: [docker-host]
+Push Docker Image:
+  stage: package
+  before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - docker pull $INTEGRATION_DOCKER_IMAGE
+  script:
+  - docker tag $INTEGRATION_DOCKER_IMAGE $RELEASE_DOCKER_IMAGE
+  - docker push $RELEASE_DOCKER_IMAGE
+interruptible: true
+tags: [docker-host]
 
