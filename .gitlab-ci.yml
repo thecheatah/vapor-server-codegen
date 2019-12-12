@@ -37,7 +37,7 @@ Integration Tests:
     - cd VaporTestServer
     - swift test
   cache:
-    key: DeviceLocatoriOSApp
+    key: VaporServerTestProjectBuildCache
     untracked: true
     paths:
       - src/test/resources/AllTest/VaporTestServer/.build
