@@ -29,10 +29,12 @@ Integration Tests:
   script:
     - cd src/test/resources/AllTest
     - docker run --rm -v "$(pwd):/output" $INTEGRATION_DOCKER_IMAGE -i codegen_test.yml -o ./VaporTestInterface --additional-properties projectName=VaporTestInterface
+    - cd VaporTestServer
     - swift test
-    - cd ../../../..
+    - cd ../../../../..
     - cd src/test/resources/WithoutAuthTest
     - docker run --rm -v "$(pwd):/output" $INTEGRATION_DOCKER_IMAGE -i codegen_test.yml -o ./VaporTestInterface --additional-properties projectName=VaporTestInterface
+    - cd VaporTestServer
     - swift test
   interruptible: true
   tags: [docker-host, xcode]
