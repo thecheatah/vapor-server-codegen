@@ -398,43 +398,23 @@ To get into the grove of making changes, running tests, adding new functionality
 
 ### 1. Get the project to build
 
-At a minimum, you need to install Maven, and I would recommend a java IDE like Eclipse. Once you have maven installed you can run `mvn package` to build, run tests and produce a jar. If the tests fail for some reason and you still want a jar, you can run `mvn -Dmaven.test.skip=true package`
+This project uses docker and maven to build. The root contains a `build.sh` that results in a docker image being built. The default docker image is configured using environment variables located in `.env`. You can run `build.sh` after checking out the project and use the resulting docker image `synology:5350/swagger-codegen/swift/vapor-server-codegen`. The swift tests below make use of this image as well. So if you change the `.env` file you will need to update the `run_codegen.sh` files as well.
 
 ### 2. Setup for swift development
 
 Once you can see that the java project works, you should configure the swift project as well for development
 
-In the root of the project run the following commands:
+There are two swift projects `AllTest` and `WithoutAuthTest` that test the codegen to ensure that the output compiles and does what's expected. The projects are located in `src/test/resources/`.
 
-```shell
-cd test/resources/AllTest
-ln -s ../../../../target/test-classes/AllTest/VaporTestInterface ./
-cd ../../..
-cd test/resources/WithoutAuthTest
-ln -s ../../../../target/test-classes/WithoutAuthTest/VaporTestInterface ./
-cd ../../..
-```
-The java tests build `VaporTestInterface` under `target/test-classes/swift/`. If you link it like this, you can run the xcode tests right from the xcode test project.
+Each project directory has a test yaml `codegen_test.yml`, a build script `run_codegen.sh` and a test project `VaporTestServer`. Running the build script will output a `VaporTestInterface` folder. You should be able to open the `VaporTestServer` project and run the tests.
 
-### 3. Setup for running tests in swift
-
-Again in the root of the project folder:
-```shell
-cd src/test/resources/swift/VaporTestServer
-vapor xcode
-```
-
-The `vapor xcode` command will ask if you want to open the xcode project. Hit yes and it will launch xcode. You can hit run and see the test project build. I mainly use it to run the tests. So go to the tests section in xcode and run all of them from there.
-
-If you don't want to use xcode you can simply run `swift test` in the `src/test/resources/swift/VaporTestServer` directory.
-
-### 4. Edit, build, test cycle
+### 3. Edit, build, test cycle
 
 Now you are ready for the edit, build, test cycle.
 
 1. You can edit the java code as well as the mustache templates in the java project
-2. Run `mvn -Dmaven.test.skip=true package` to build the java package
-3. Run codegen `src/test/resources/run_codegen.sh`
+2. Run `build.sh` to build the java package and generate a docker image
+3. Run codegen `src/test/resources/AllTest/run_codegen.sh` or `src/test/resources/WithoutAuthTest/run_codegen.sh`
 3. Run the tests in swift using xcode or the commandline
 
 I mostly edited the mustache templates in this project. `run_codegen.sh` pipes the output by default to a file in the same directory called `codegen.out`. It's configured to dump the json payloads that are fed into the mustache template engine. Each generated swift file has a "Template Input" line like this: `Template Input: /APIs.FormData`. In the example template input line you can search for `/APIs.FormData` in the `codegen.out` file and find the json payload. I usually copy that subset of the json payload into Chrome/Safari/Firefox's developer console. For example I will do `var json = command+v` and then press up and type in `json` and hit enter. The browser's developer console will let you browse the json tree easily.
