@@ -5,7 +5,7 @@
     <artifactId>vapor-server-codegen</artifactId>
     <packaging>jar</packaging>
     <name>vapor-server-codegen</name>
-    <version>3.0.0</version>
+    <version>4.0.0</version>
     <build>
         <plugins>
             <plugin>

@@ -1,12 +1,10 @@
-package com.ravneetsingh.swagger.swift.vapor3;
+package com.ravneetsingh.swagger.swift.vapor4;
 
 import io.swagger.codegen.v3.*;
-import io.swagger.codegen.v3.generators.DefaultCodegenConfig;
 
 import java.util.*;
-import java.io.File;
 
-public class SwiftVapor3Codegen extends Swift4Codegen {
+public class SwiftVapor4Codegen extends Swift4Codegen {
 
   /**
    * Configures the type of generator.
@@ -25,7 +23,7 @@ public class SwiftVapor3Codegen extends Swift4Codegen {
    * @return the friendly name for the generator
    */
   public String getName() {
-    return "SwiftVapor3";
+    return "SwiftVapor4";
   }
 
   /**
@@ -35,7 +33,7 @@ public class SwiftVapor3Codegen extends Swift4Codegen {
    * @return A string value for the help message
    */
   public String getHelp() {
-    return "Generates a SwiftVapor3 client library.";
+    return "Generates a SwiftVapor4 client library.";
   }
 
   public void processOpts() {
@@ -45,7 +43,7 @@ public class SwiftVapor3Codegen extends Swift4Codegen {
     "routes.swift"));
   }
   
-  public SwiftVapor3Codegen() {
+  public SwiftVapor4Codegen() {
 	  super();
   }
   

@@ -437,7 +437,7 @@ At this point, you've likely generated a client setup.  It will include somethin
 |-- src
 |--- main
 |---- java
-|----- com.ravneetsingh.swagger.swift.vapor3.Swiftvapor3Generator.java // generator file
+|----- com.ravneetsingh.swagger.swift.vapor4.Swiftvapor3Generator.java // generator file
 |---- resources
 |----- SwiftVapor3 // template files
 |----- META-INF

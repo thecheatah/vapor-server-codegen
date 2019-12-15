@@ -1,4 +1,4 @@
-package com.ravneetsingh.swagger.swift.vapor3;
+package com.ravneetsingh.swagger.swift.vapor4;
 
 import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenModel;

@@ -1,10 +1,9 @@
-package com.ravneetsingh.swagger.swift.vapor3;
+package com.ravneetsingh.swagger.swift.vapor4;
 
 import io.swagger.codegen.v3.CliOption;
 import io.swagger.codegen.v3.CodegenConstants;
 import io.swagger.codegen.v3.CodegenModel;
 import io.swagger.codegen.v3.CodegenProperty;
-import io.swagger.codegen.v3.SupportingFile;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;

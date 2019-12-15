@@ -6,8 +6,8 @@ stages:
 
 variables:
   INTEGRATION_DOCKER_IMAGE: synology:5350/swagger-codegen/swift/vapor-server-codegen:build-$CI_PIPELINE_ID-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-  PACKAGE_DOCKER_IMAGE: synology:5350/swagger-codegen/swift/vapor-server-codegen:3.0
-  RELEASE_ON_DOCKER_IMAGE: thecheatah/vapor-server-codegen:3.0
+  PACKAGE_DOCKER_IMAGE: synology:5350/swagger-codegen/swift/vapor-server-codegen:4
+  RELEASE_ON_DOCKER_IMAGE: thecheatah/vapor-server-codegen:4
   CODE_GEN_CLI_VERSION: 3.0.14
 
 Build Docker Image:
