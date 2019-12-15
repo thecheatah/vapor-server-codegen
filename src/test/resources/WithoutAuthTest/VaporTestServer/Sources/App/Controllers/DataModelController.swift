@@ -7,12 +7,11 @@
 
 import Vapor
 import VaporTestInterface
-import Authentication
 
 class DataModelController: DataModelApiDelegate {
   typealias AuthType = DummyAuthType.Type
-
-  func referencedObject(with req: Request, body: SimpleObject) throws -> Future<referencedObjectResponse> {
-    return req.future(.http200(body))
+  
+  func referencedObject(with req: Request, body: SimpleObject) throws -> EventLoopFuture<referencedObjectResponse> {
+    return req.eventLoop.makeSucceededFuture(.http200(body))
   }
 }
