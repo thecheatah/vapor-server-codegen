@@ -12,10 +12,10 @@ class HeadersController: HeadersApiDelegate {
   typealias AuthType = SampleAuthType
 
   func responseHeaders(with req: Request) throws -> EventLoopFuture<responseHeadersResponse> {
-    return req.future(.http303(location: "https://chckt.com/login"))
+    return req.eventLoop.makeSucceededFuture(.http303(location: "https://chckt.com/login"))
   }
   
   func requestHeaders(with req: Request, xExampleRequiredHeader: String, xExampleArrayHeader: [String]) throws -> EventLoopFuture<requestHeadersResponse> {
-    return req.future(.http200(RequestHeadersResponse(requiredHeader: xExampleRequiredHeader, arrayHeader: xExampleArrayHeader)))
+    return req.eventLoop.makeSucceededFuture(.http200(RequestHeadersResponse(requiredHeader: xExampleRequiredHeader, arrayHeader: xExampleArrayHeader)))
   }
 }

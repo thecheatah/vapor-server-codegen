@@ -11,7 +11,7 @@ import VaporTestInterface
 class DataModelController: DataModelApiDelegate {
   typealias AuthType = SampleAuthType
 
-  func referencedObject(with req: Request, body: SimpleObject) throws -> Future<referencedObjectResponse> {
-    return req.future(.http200(body))
+  func referencedObject(with req: Request, body: SimpleObject) throws -> EventLoopFuture<referencedObjectResponse> {
+    return req.eventLoop.makeSucceededFuture(.http200(body))
   }
 }
