@@ -13,15 +13,15 @@ public enum {{operationId}}Response: ResponseEncodable {
 
   public func encodeResponse(for request: Request) -> EventLoopFuture<Response> {
     switch self {
-{{#responses}}    case .http{{code}}{{#hasHeaders}}({{#headers}}let {{name}}{{#hasMore}}, {{/hasMore}}{{/headers}}){{/hasHeaders}}{{#dataType}}(let content){{/dataType}}:{{#hasHeaders}}
-      let response = Response()
+{{#responses}}    case .http{{code}}{{#hasHeaders}}({{#headers}}let {{name}}{{#hasMore}}, {{/hasMore}}{{/headers}}){{/hasHeaders}}{{#dataType}}(let content){{/dataType}}:
+{{#hasHeaders}}      let response = Response()
       response.status = HTTPStatus(statusCode: {{code}})
 {{#headers}}      if let {{name}} = {{name}} {
         response.headers.add(name: "{{{baseName}}}", value: {{name}})
       }
 {{/headers}}      return request.eventLoop.makeSucceededFuture(response)
 {{/hasHeaders}}{{#dataType}}
-        return content.encodeResponse(for: request).map { (response: Response) -> (Response) in
+      return content.encodeResponse(for: request).map { (response: Response) -> (Response) in
         response.status = HTTPStatus(statusCode: {{code}})
         return response
       }
