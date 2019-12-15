@@ -60,19 +60,19 @@ As of now, you must generate your own jar file. Check out or download the comple
 ```
 git clone https://github.com/thecheatah/SwiftVapor-swagger-codegen
 cd SwiftVapor-swagger-codegen
-mvn package
+./build.sh
 ```
 
-The `mvn package` command will run test that include a swift project. This project was created on MacOS with Swift 5 installed. To ignore tests run `mvn -Dmaven.test.skip=true package`. The project also contains `SwiftVapor3Codegen/src/test/resources/swift/VaporTestServer/run_linux_test` to run the tests in a docker container.
+The `./build.sh` command will run `mvn -Dmaven.test.skip=true package` to build the java package without running test and produce a docker image `synology:5350/swagger-codegen/swift/vapor-server-codegen`. This project was created on MacOS with Swift 5.1.3 installed. The project also contains `./src/test/resources/AllTest/VaporTestServer/run_linux_test` and `./src/test/resources/WithoutAuthTest/VaporTestServer/run_linux_test` to run the tests in a docker container.
 
 ## How do I run this project?
 
-Once the package has been created, you will find `SwiftVapor3-swagger-codegen-1.0.0.jar` in the `target` directory.
+Once the package has been created, you will find `vapor-server-codegen-4.0.0.jar` in the `target` directory.
 
 You can now generate the Vapor Server Interface Package from a swagger file.
 
 ```
-java -cp SwiftVapor3-swagger-codegen-1.0.0.jar:swagger-codegen-cli-3.0.7.jar io.swagger.codegen.v3.cli.SwaggerCodegen generate -l SwiftVapor3 -i ./codegen_test.yml -o ./output/MyApiVaporInterface --additional-properties projectName=MyApiVaporInterface
+java -cp vapor-server-codegen-4.0.0.jar:swagger-codegen-cli-3.0.7.jar io.swagger.codegen.v3.cli.SwaggerCodegen generate -l SwiftVapor4 -i ./codegen_test.yml -o ./output/MyApiVaporInterface --additional-properties projectName=MyApiVaporInterface
 ```
 
 The `swagger-codegen-cli-3.0.7.jar` can be built from the [swagger-codegen](https://github.com/swagger-api/swagger-codegen) package. Personally, I use the one from maven `.m2/repository/io/swagger/codegen/v3/swagger-codegen-cli/3.0.7/swagger-codegen-cli-3.0.7.jar` This project depends on it and will be pulled in to your maven cache.
@@ -432,9 +432,9 @@ At this point, you've likely generated a client setup.  It will include somethin
 |-- src
 |--- main
 |---- java
-|----- com.ravneetsingh.swagger.swift.vapor4.Swiftvapor3Generator.java // generator file
+|----- com.ravneetsingh.swagger.swift.vapor4.Swiftvapor4Generator.java // generator file
 |---- resources
-|----- SwiftVapor3 // template files
+|----- SwiftVapor4 // template files
 |----- META-INF
 |------ services
 |------- io.swagger.codegen.CodegenConfig
@@ -442,11 +442,11 @@ At this point, you've likely generated a client setup.  It will include somethin
 
 You _will_ need to make changes in at least the following:
 
-`Swiftvapor3Generator.java`
+`Swiftvapor4Generator.java`
 
 Templates in this folder:
 
-`src/main/resources/SwiftVapor3`
+`src/main/resources/SwiftVapor4`
 
 Once modified, you can run this:
 
@@ -457,14 +457,14 @@ mvn package
 In your generator project.  A single jar file will be produced in `target`.  You can now use that with codegen:
 
 ```
-java -cp /path/to/swagger-codegen-cli.jar:/path/to/your.jar io.swagger.codegen.Codegen -l SwiftVapor3 -i /path/to/swagger.yaml -o ./test
+java -cp /path/to/swagger-codegen-cli.jar:/path/to/your.jar io.swagger.codegen.Codegen -l SwiftVapor4 -i /path/to/swagger.yaml -o ./test
 ```
 
 Now your templates are available to the client generator and you can write output values
 
 ## But how do I modify this?
-The `Swiftvapor3Generator.java` has comments in it--lots of comments.  There is no good substitute
-for reading the code more, though.  See how the `Swiftvapor3Generator` implements `CodegenConfig`.
+The `Swiftvapor4Generator.java` has comments in it--lots of comments.  There is no good substitute
+for reading the code more, though.  See how the `Swiftvapor4Generator` implements `CodegenConfig`.
 That class has the signature of all values that can be overridden.
 
 For the templates themselves, you have a number of values available to you for generation.
@@ -478,7 +478,7 @@ the object you have available during client generation:
 # -DdebugOperations prints operations passed to the template engine
 # -DdebugSupportingFiles prints additional data passed to the template engine
 
-java -DdebugOperations -cp /path/to/swagger-codegen-cli.jar:/path/to/your.jar io.swagger.codegen.Codegen -l SwiftVapor3 -i /path/to/swagger.yaml -o ./test
+java -DdebugOperations -cp /path/to/swagger-codegen-cli.jar:/path/to/your.jar io.swagger.codegen.Codegen -l SwiftVapor4 -i /path/to/swagger.yaml -o ./test
 ```
 
 Will, for example, output the debug info for operations.  You can use this info
