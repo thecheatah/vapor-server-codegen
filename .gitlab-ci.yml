@@ -32,11 +32,13 @@ Integration Tests:
     - cd src/test/resources/AllTest
     - docker run --rm -v "$(pwd):/output" $INTEGRATION_DOCKER_IMAGE -i codegen_test.yml -o ./VaporTestInterface --additional-properties projectName=VaporTestInterface
     - cd VaporTestServer
+    - swift package clean
     - swift test
     - cd ../../../../..
     - cd src/test/resources/WithoutAuthTest
     - docker run --rm -v "$(pwd):/output" $INTEGRATION_DOCKER_IMAGE -i codegen_test.yml -o ./VaporTestInterface --additional-properties projectName=VaporTestInterface
     - cd VaporTestServer
+    - swift package clean
     - swift test
   cache:
     key: VaporServerTestProjectBuildCache
