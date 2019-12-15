@@ -70,6 +70,5 @@ Release to Docker:
     - docker push $RELEASE_ON_DOCKER_IMAGE
   tags: [docker-host]
   only:
-    - "3.0"
-    - master
+    - "4"
 
