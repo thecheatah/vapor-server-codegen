@@ -6,7 +6,6 @@
 //
 
 import Vapor
-import Authentication
 import VaporTestInterface
 
 class AnotherSecurityMiddleware: AuthenticationMiddleware {
@@ -16,14 +15,14 @@ class AnotherSecurityMiddleware: AuthenticationMiddleware {
     return SampleAuthType.self
   }
   
-  func respond(to request: Request, chainingTo next: Responder) throws -> EventLoopFuture<Response> {
-    guard let bearer = request.http.headers.bearerAuthorization else {
-      throw Abort(.unauthorized)
+  func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
+    guard let bearer = request.headers.bearerAuthorization else {
+      return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
     }
     if bearer.token != "Secret" {
-      throw Abort(.unauthorized)
+      return request.eventLoop.makeFailedFuture(Abort(.unauthorized))
     }
-    try request.authenticate(SampleAuthType(securedBy: .security2, secret: bearer.token))
-    return try next.respond(to: request)
+    request.auth.login(SampleAuthType(securedBy: .security2, secret: bearer.token))
+    return next.respond(to: request)
   }
 }

@@ -12,6 +12,6 @@ class QueryParametersController: QueryParametersApiDelegate {
   typealias AuthType = SampleAuthType
 
   func queryParameters(with req: Request, param1: String, param2: Int?) throws -> EventLoopFuture<queryParametersResponse> {
-    return req.future(.http200(QueryParametersResponse(param1: param1, param2: param2)))
+    return req.eventLoop.makeSucceededFuture(.http200(QueryParametersResponse(param1: param1, param2: param2)))
   }
 }

@@ -5,76 +5,85 @@
 //  Created by Ravneet Singh on 4/10/19.
 //
 
-import Vapor
-import App
-import XCTest
+@testable import App
+import XCTVapor
 import VaporTestInterface
 
 //https://medium.com/swift2go/vapor-3-series-iii-testing-b192be079c9e
 
 final class AuthenticationTests: XCTestCase {
-  
+
   var app: Application!
-  
+
   override func setUp() {
     super.setUp()
     app = try! Application.testable()
   }
-  
+
   override func tearDown() {
     super.tearDown()
   }
-  
+
   func testNoAuthentication() throws {
-    let response = try app.sendRequest(to: "/authentication/single", method: .GET, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.unauthorized, "/authentication/single did not return a 401")
+    try app.test(.GET, "/authentication/single") { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.unauthorized, response.status, "/authentication/single did not return a 401")
+    }
   }
-  
+
   func testWithWrongAuthentication() throws {
     var headers = HTTPHeaders()
     headers.bearerAuthorization = BearerAuthorization(token: "Wrong Secret")
-    let response = try app.sendRequest(to: "/authentication/single", method: .GET, headers: headers, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.unauthorized, "/authentication/single did not return a 401")
+    try app.test(.GET, "/authentication/single", headers: headers, closure: { (response: XCTHTTPResponse) in
+      XCTAssertEqual(response.status, HTTPStatus.unauthorized, "/authentication/single did not return a 401")
+    })
   }
-  
+
   func testWithCorrectAuthentication() throws {
     var headers = HTTPHeaders()
     headers.bearerAuthorization = BearerAuthorization(token: "Secret")
-    let response = try app.sendRequest(to: "/authentication/single", method: .GET, headers: headers, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/authentication/single did not return a 200")
-    let output = try! response.content.decode(SecurityProtectedEndpointResponse.self).wait()
-    XCTAssertEqual(output.secret, "Secret", "/authentication/single secret did not match")
-    XCTAssertEqual(output.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security1, "/authentication/single securedBy did not match")
+    try app.test(.GET, "/authentication/single", headers: headers) { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.ok, response.status, "/authentication/single did not return a 200")
+      XCTAssertContent(SecurityProtectedEndpointResponse.self, response) {
+        XCTAssertEqual($0.secret, "Secret", "/authentication/single secret did not match")
+        XCTAssertEqual($0.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security1, "/authentication/single securedBy did not match")
+      }
+    }
   }
 
   func testWithAnotherSecurityMiddlewareCorrectAuthentication() throws {
     var headers = HTTPHeaders()
     headers.bearerAuthorization = BearerAuthorization(token: "Secret")
-    let response = try app.sendRequest(to: "/authentication/another", method: .GET, headers: headers, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/authentication/another did not return a 200")
-    let output = try! response.content.decode(SecurityProtectedEndpointResponse.self).wait()
-    XCTAssertEqual(output.secret, "Secret", "/authentication/another secret did not match")
-    XCTAssertEqual(output.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security2, "/authentication/another securedBy did not match")
+    try app.test(.GET, "/authentication/another", headers: headers) { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.ok, response.status, "/authentication/another did not return a 200")
+      XCTAssertContent(SecurityProtectedEndpointResponse.self, response) {
+        XCTAssertEqual($0.secret, "Secret", "/authentication/another secret did not match")
+        XCTAssertEqual($0.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security2, "/authentication/another securedBy did not match")
+      }
+    }
   }
 
   func testAnotherApiWithCorrectAuthentication() throws {
     var headers = HTTPHeaders()
     headers.bearerAuthorization = BearerAuthorization(token: "Secret")
-    let response = try app.sendRequest(to: "/authentication-another/single", method: .GET, headers: headers, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/authentication-another/single did not return a 200")
-    let output = try! response.content.decode(SecurityProtectedEndpointResponse.self).wait()
-    XCTAssertEqual(output.secret, "Secret", "/authentication-another/single secret did not match")
-    XCTAssertEqual(output.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security1, "/authentication-another/single securedBy did not match")
+    try app.test(.GET, "/authentication-another/single", headers: headers) { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.ok, response.status, "/authentication-another/single did not return a 200")
+      XCTAssertContent(SecurityProtectedEndpointResponse.self, response) {
+        XCTAssertEqual($0.secret, "Secret", "/authentication-another/single secret did not match")
+        XCTAssertEqual($0.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security1, "/authentication-another/single securedBy did not match")
+      }
+    }
   }
-  
+
   func testAnotherApiWithAnotherSecurityMiddlewareCorrectAuthentication() throws {
     var headers = HTTPHeaders()
     headers.bearerAuthorization = BearerAuthorization(token: "Secret")
-    let response = try app.sendRequest(to: "/authentication-another/another", method: .GET, headers: headers, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/authentication-another/another did not return a 200")
-    let output = try! response.content.decode(SecurityProtectedEndpointResponse.self).wait()
-    XCTAssertEqual(output.secret, "Secret", "/authentication-another/another secret did not match")
-    XCTAssertEqual(output.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security2, "/authentication-another/another securedBy did not match")
+    try app.test(.GET, "/authentication-another/another", headers: headers) { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.ok, response.status, "/authentication-another/another did not return a 200")
+      XCTAssertContent(SecurityProtectedEndpointResponse.self, response) {
+        XCTAssertEqual($0.secret, "Secret", "/authentication-another/another secret did not match")
+        XCTAssertEqual($0.securedBy, SecurityProtectedEndpointResponse.SecuredBy.security2, "/authentication-another/another securedBy did not match")
+      }
+    }
   }
 
   static let allTests = [

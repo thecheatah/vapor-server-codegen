@@ -1,6 +1,5 @@
-import Vapor
-import App
-import XCTest
+@testable import App
+import XCTVapor
 
 //https://medium.com/swift2go/vapor-3-series-iii-testing-b192be079c9e
 
@@ -18,9 +17,11 @@ final class AppTests: XCTestCase {
   }
   
   func testRootRequest() throws {
-    let response = try app.sendRequest(to: "/", method: .GET, body: EmptyBody()) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/ did not return a 200")
-    XCTAssertNil(response.http.body.data, "/ body should be nil")
+    try app.test(.GET, "/") { (response: XCTHTTPResponse) in
+      XCTAssertEqual(HTTPStatus.ok, response.status, "/ did not return a 200")
+      XCTAssertNil(response.body.data, "/ body should be nil")
+      XCTAssertEqual(0, response.body.count, "/ body should be nil")
+    }
   }
   
   static let allTests = [

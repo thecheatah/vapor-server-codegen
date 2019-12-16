@@ -1,25 +1,25 @@
-// swift-tools-version:4.2
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
   name: "VaporTestServer",
+  platforms: [
+    .macOS(.v10_14)
+  ],
   products: [
-    .library(name: "VaporTestServer", targets: ["App"]),
+    .executable(name: "Run", targets: ["Run"]),
+    .library(name: "App", targets: ["App"]),
   ],
   dependencies: [
     // 💧 A server-side Swift web framework.
-    .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
-    
-    // 🔵 Swift ORM (queries, models, relations, etc) built on SQLite 3.
-    .package(url: "https://github.com/vapor/fluent-sqlite.git", from: "3.0.0"),
-    // 👤 Authentication and Authorization framework for Fluent.
-    .package(url: "https://github.com/vapor/auth.git", from: "2.0.0"),
+    .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2.1"),
+    .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta.2"),
+    .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0-beta.2"),
     .package(path: "../VaporTestInterface/")
   ],
   targets: [
-    .target(name: "App", dependencies: ["FluentSQLite", "Vapor", "Authentication", "VaporTestInterface"]),
+    .target(name: "App", dependencies: ["Fluent", "FluentSQLiteDriver", "Vapor", "VaporTestInterface"]),
     .target(name: "Run", dependencies: ["App"]),
-    .testTarget(name: "AppTests", dependencies: ["App"])
+    .testTarget(name: "AppTests", dependencies: ["App", "XCTVapor"])
   ]
 )
-

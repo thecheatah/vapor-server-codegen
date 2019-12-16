@@ -1,6 +1,5 @@
-import Vapor
-import App
-import XCTest
+@testable import App
+import XCTVapor
 import VaporTestInterface
 
 //https://medium.com/swift2go/vapor-3-series-iii-testing-b192be079c9e
@@ -20,19 +19,21 @@ final class MultipleResponseCodesTests: XCTestCase {
   
   func testMultipleResponseCodesWithPayload() throws {
     let input = MultipleResponseCodeRequest(responseCode: ._201)
-    let response = try app.sendRequest(to: "/multiple/response/codes", method: .POST, body: input) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.created, "/multiple/response/codes did not return a 201")
-    XCTAssertNotNil(response.http.body.data, "/multiple/response/codes should not be nil")
-    let result = try! response.content.decode(SimpleObject.self).wait()
-    XCTAssertEqual(result.simpleString, "Simple String", "/multiple/response/codes simpleString was not of expected value: \"String Value\"")
-    XCTAssertEqual(result.simpleArray[0], "Hi!", "/multiple/response/codes simpleArray[0] was not of expected value: \"Hi!\"")
+    try app.test(.POST, "/multiple/response/codes", json: input, closure: { (response: XCTHTTPResponse) in
+      XCTAssertEqual(response.status, HTTPStatus.created, "/multiple/response/codes did not return a 201")
+      XCTAssertContent(SimpleObject.self, response) { (output: SimpleObject) in
+        XCTAssertEqual(output.simpleString, "Simple String", "/multiple/response/codes simpleString was not of expected value: \"String Value\"")
+        XCTAssertEqual(output.simpleArray[0], "Hi!", "/multiple/response/codes simpleArray[0] was not of expected value: \"Hi!\"")
+      }
+    })
   }
 
   func testMultipleResponseCodesWithoutPayload() throws {
     let input = MultipleResponseCodeRequest(responseCode: ._200)
-    let response = try app.sendRequest(to: "/multiple/response/codes", method: .POST, body: input) as Response
-    XCTAssertEqual(response.http.status, HTTPStatus.ok, "/multiple/response/codes did not return a 201")
-    XCTAssertNil(response.http.body.data, "/multiple/response/codes should  be nil")
+    try app.test(.POST, "/multiple/response/codes", json: input, closure: { (response: XCTHTTPResponse) in
+      XCTAssertEqual(response.status, HTTPStatus.ok, "/multiple/response/codes did not return a 201")
+      XCTAssertEqual(0, response.body.count, "/multiple/response/codes body should be empty")
+    })
   }
 
   static let allTests = [

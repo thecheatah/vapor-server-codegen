@@ -3,7 +3,7 @@ info:
   version: 0.0.1
   title: Swift Vapor 3 Codegen Test
   description: Used to test the codegen
-servers: 
+servers:
   - url: https://vapor.codegen/
     description: Test Server
 paths:
@@ -31,14 +31,14 @@ paths:
       responses:
         '200':
           description: OK
-  /path/{parameter}:
+  /path/{param1}:
     get:
       operationId: singleParameter
       tags: [Path Parsing]
       description: Test ability to intake single parameter
       parameters:
         - in: path
-          name: parameter
+          name: param1
           required: true
           schema:
             type: string
@@ -47,7 +47,7 @@ paths:
         '200':
           description: OK
           content:
-            applicatin/json:
+            application/json:
               schema:
                 type: string
                 example: parameter
@@ -206,7 +206,7 @@ paths:
     get:
       operationId: securityProtectedEndpoint
       tags: [Authentication]
-      security: 
+      security:
         - Security1: []
       responses:
         '200':
@@ -219,7 +219,7 @@ paths:
     get:
       operationId: anotherSecurityProtectedEndpoint
       tags: [Authentication]
-      security: 
+      security:
         - Security2: []
       responses:
         '200':
@@ -232,7 +232,7 @@ paths:
     get:
       operationId: anotherApiSecurityProtectedEndpoint
       tags: [Another Authentication]
-      security: 
+      security:
         - Security1: []
       responses:
         '200':
@@ -245,7 +245,7 @@ paths:
     get:
       operationId: anotherApiAnotherSecurityProtectedEndpoint
       tags: [Another Authentication]
-      security: 
+      security:
         - Security2: []
       responses:
         '200':

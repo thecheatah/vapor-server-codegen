@@ -7,40 +7,62 @@
 
 @testable import App
 import Vapor
+import XCTVapor
 
 extension Application {
   static func testable() throws -> Application {
-    var config = Config.default()
-    var services = Services.default()
-    var env = Environment.testing
-    try App.configure(&config, &env, &services)
-    let app = try Application(config: config, environment: env, services: services)
-    try App.boot(app)
+    let app = Application(.testing)
+    try configure(app)
     return app
-  }
-
-  func sendRequest<Body>(to path: String, method: HTTPMethod, headers: HTTPHeaders = .init(), body: Body?, bodyEncoding: MediaType = .json) throws -> Response where Body: Content {
-    /*
-    var headers = headers
-    if isLoggedInRequest {
-      let credentials = BasicAuthorization(username: "admin", password: "password")
-      var tokenHeaders = HTTPHeaders()
-      tokenHeaders.basicAuthorization = credentials
-      let tokenBody: EmptyBody? = nil
-      let tokenResponse = try sendRequest(to: "api/users/login", method: .POST, headers: tokenHeaders, body: tokenBody)
-      let token = try tokenResponse.content.decode(Token.self).wait()
-      headers.add(name: .authorization, value: "Bearer \(token.token)")
-    }
-    */
-    let httpRequest = HTTPRequest(method: method, url: URL(string: path)!, headers: headers)
-    let wrappedRequest = Request(http: httpRequest, using: self)
-    if let body = body {
-      try wrappedRequest.content.encode(body, as: bodyEncoding)
-    }
-    let responder = try make(Responder.self)
-//    print(wrappedRequest)
-    return try responder.respond(to: wrappedRequest).wait()
   }
 }
 
-struct EmptyBody: Content {}
+extension XCTApplicationTester {
+  
+  @discardableResult
+  public func test<Body>(
+    _ method: HTTPMethod,
+    _ path: String,
+    headers: HTTPHeaders = [:],
+    json: Body,
+    file: StaticString = #file,
+    line: UInt = #line,
+    closure: (XCTHTTPResponse) throws -> () = { _ in }
+  ) throws -> XCTApplicationTester
+    where Body: Encodable
+  {
+    var body = ByteBufferAllocator().buffer(capacity: 0)
+    let encoder = JSONEncoder()
+    encoder.dateEncodingStrategy = .iso8601
+    try body.writeBytes(encoder.encode(json))
+    var realHeaders = headers
+    // Allow caller to override the Content-Type for JSON.
+    if !realHeaders.contains(name: .contentType) {
+      realHeaders.add(name: .contentType, value: HTTPMediaType.json.serialize())
+    }
+    return try self.test(method, path, headers: realHeaders, body: body, closure: closure)
+  }
+  
+  @discardableResult
+  public func test<Body>(
+    _ method: HTTPMethod,
+    _ path: String,
+    headers: HTTPHeaders = [:],
+    form: Body,
+    file: StaticString = #file,
+    line: UInt = #line,
+    closure: (XCTHTTPResponse) throws -> () = { _ in }
+  ) throws -> XCTApplicationTester
+    where Body: Encodable
+  {
+    var body = ByteBufferAllocator().buffer(capacity: 0)
+    let encoder = URLEncodedFormEncoder()
+    try body.writeBytes(encoder.encode(form).data(using: .utf8)!)
+    var realHeaders = headers
+    // Allow caller to override the Content-Type for JSON.
+    if !realHeaders.contains(name: .contentType) {
+      realHeaders.add(name: .contentType, value: HTTPMediaType.urlEncodedForm.serialize())
+    }
+    return try self.test(method, path, headers: realHeaders, body: body, closure: closure)
+  }
+}

@@ -12,11 +12,11 @@ class AuthenticationController: AuthenticationApiDelegate {
   typealias AuthType = SampleAuthType
 
   func securityProtectedEndpoint(with req: Request, asAuthenticated user: SampleAuthType) throws -> EventLoopFuture<securityProtectedEndpointResponse> {
-    return req.future(.http200(SecurityProtectedEndpointResponse(secret: user.secret, securedBy: user.securedBy)))
+    return req.eventLoop.makeSucceededFuture(.http200(SecurityProtectedEndpointResponse(secret: user.secret, securedBy: user.securedBy)))
   }
   
   func anotherSecurityProtectedEndpoint(with req: Request, asAuthenticated user: SampleAuthType) throws -> EventLoopFuture<anotherSecurityProtectedEndpointResponse> {
-    return req.future(.http200(SecurityProtectedEndpointResponse(secret: user.secret, securedBy: user.securedBy)))
+    return req.eventLoop.makeSucceededFuture(.http200(SecurityProtectedEndpointResponse(secret: user.secret, securedBy: user.securedBy)))
   }
 
 }
