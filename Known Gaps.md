@@ -18,3 +18,5 @@ This issue is the result of the way that codegen generates the json for the must
 7. Response headers cannot be marked as required. There is a bug with the code parser, that results in the required parameter not being set correctly.
 
 8. Does not support more then one authentication mechanism per endpoint.
+
+9. URL Path parameter slug names must match. The following endpoints will conflict /user/{userId} and /user/{anotherName}/messages. To fix this the second endpoint should be /user/{userId}/messages
