@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  vapor-3-series-app:
+  vapor-app:
     build:
       context: ../../../../..
-      dockerfile: src/test/resources/swift/VaporTestServer/Dockerfile
+      dockerfile: src/test/resources/WithoutAuthTest/VaporTestServer/Dockerfile

@@ -3,3 +3,5 @@
 cd ../../../../../
 docker-compose -f src/test/resources/AllTest/VaporTestServer/docker-compose.yml build
 docker-compose -f src/test/resources/AllTest/VaporTestServer/docker-compose.yml up --abort-on-container-exit
+docker-compose -f src/test/resources/AllTest/VaporTestServer/docker-compose.yml down
+

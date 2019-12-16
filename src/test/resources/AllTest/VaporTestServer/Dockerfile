@@ -1,9 +1,13 @@
-FROM swift:4.2
+FROM vapor/swift:5.1
+
+# Install sqlite3
+RUN apt-get update -y \
+	&& apt-get install -y libsqlite3-dev
 
 WORKDIR /package
 
-COPY src/test/resources/swift/VaporTestServer ./VaporTestServer
-COPY target/test-classes/swift/VaporTestInterface ./VaporTestInterface
+COPY src/test/resources/AllTest/VaporTestServer ./VaporTestServer
+COPY src/test/resources/AllTest/VaporTestInterface ./VaporTestInterface
 
 WORKDIR /package/VaporTestServer
 
