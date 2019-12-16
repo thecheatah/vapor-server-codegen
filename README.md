@@ -20,7 +20,7 @@ I manage a [docker image](https://hub.docker.com/r/thecheatah/vapor-server-codeg
 Docker image is expected to mount the current working directry to the container's `/output` directory. You can run the codegen using the following:
 
 ```sh
-docker run --rm -v "$(pwd):/output" docker push thecheatah/vapor-server-codegen:4 -i api.yaml -o ./output --additional-properties projectName=MyProjectAPI
+docker run --rm -v "$(pwd):/output" thecheatah/vapor-server-codegen:4 -i api.yaml -o ./output --additional-properties projectName=MyProjectAPI
 ```
 
 You can structure your directory like this:
@@ -33,7 +33,7 @@ You can structure your directory like this:
 `build.sh` can contain the following:
 ```sh
 #!/bin/sh
-docker run --rm -v "$(pwd):/output" docker push thecheatah/vapor-server-codegen:4 -i api.yaml -o . --additional-properties projectName=MyProjectAPI
+docker run --rm -v "$(pwd):/output" thecheatah/vapor-server-codegen:4 -i api.yaml -o . --additional-properties projectName=MyProjectAPI
 ```
 
 Running `build.sh` will create a swiftpm compatible package within the `MyProjectAPI` directory. You can commit this package and reference it from you Vapor Server using swiftpm.
@@ -58,8 +58,8 @@ As of now, you must generate your own jar file. Check out or download the comple
 
 
 ```
-git clone https://github.com/thecheatah/SwiftVapor-swagger-codegen
-cd SwiftVapor-swagger-codegen
+git clone https://github.com/thecheatah/vapor-server-codegen.git
+cd vapor-server-codegen
 ./build.sh
 ```
 
