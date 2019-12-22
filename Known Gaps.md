@@ -1,7 +1,7 @@
 # Known Gaps
 
 1. Parameters in a path must be strings
-in path/{param1}/and/{param2} both param1 and param2 must be declared as strings in the swagger
+in `path/{param1}/and/{param2}` both `param1` and `param2` must be declared as strings in the swagger
 
 2. Path parameters must be listed in swagger parameters section in the same order that they appear in the path
 
@@ -19,4 +19,6 @@ This issue is the result of the way that codegen generates the json for the must
 
 8. Does not support more then one authentication mechanism per endpoint.
 
-9. URL Path parameter slug names must match. The following endpoints will conflict /user/{userId} and /user/{anotherName}/messages. To fix this the second endpoint should be /user/{userId}/messages
+9. URL Path parameter slug names must match. The following endpoints will conflict `/user/{userId}` and `/user/{anotherName}/messages`. To fix this the second endpoint should be `/user/{userId}/messages`
+
+10. Only one level of `allOf` is supported. If `A -> B -> C`, `C` will not contain the properties from `A -> B`. This is a bug with the underlying codegen tool.
