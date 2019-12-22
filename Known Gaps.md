@@ -21,4 +21,4 @@ This issue is the result of the way that codegen generates the json for the must
 
 9. URL Path parameter slug names must match. The following endpoints will conflict `/user/{userId}` and `/user/{anotherName}/messages`. To fix this the second endpoint should be `/user/{userId}/messages`
 
-10. Only one level of `allOf` is supported. If `A -> B -> C`, `C` will not contain the properties from `A -> B`. This is a bug with the underlying codegen tool.
+10. Swift 5 Model Codegen's implementation does not use inheritance. Swagger's `allOf` is typically used to implement inheritance. `Codable` is supported only for `final class` and `struct`, both of which do not cleanly support inheritance. For that reason, the `inheritance` flag is switched off in the codegen. Thus, codegen will aggregate all fields of the "parent entity" and add them to the child. Only one level of aggregation of `allOf` is supported however. If `A -> B -> C`, `C` will not contain the properties from `A -> B`. This is a bug with the underlying codegen tool.
