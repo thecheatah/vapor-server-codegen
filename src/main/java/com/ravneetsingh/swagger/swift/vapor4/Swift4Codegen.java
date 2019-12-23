@@ -175,12 +175,12 @@ public class Swift4Codegen extends AbstractSwiftCodegen {
             boolean modelHasPropertyWithEscapedName = false;
             for (CodegenProperty prop : cm.allVars) {
                 if (!prop.name.equals(prop.baseName)) {
-                    prop.vendorExtensions.put("x-codegen-escaped-property-name", true);
+//                    prop.vendorExtensions.put("x-codegen-escaped-property-name", true);
                     modelHasPropertyWithEscapedName = true;
                 }
             }
             if (modelHasPropertyWithEscapedName) {
-                cm.vendorExtensions.put("x-codegen-has-escaped-property-names", true);
+//                cm.vendorExtensions.put("x-codegen-has-escaped-property-names", true);
             }
         }
 

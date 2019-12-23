@@ -16,13 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -638,50 +632,29 @@ public abstract class AbstractSwiftCodegen extends DefaultCodegenConfig {
         return input.replace("*/", "*_/").replace("/*", "/_*");
     }
 
+    /**
+     * Merge parent properties into the codegenModel's allVars
+     * @param codegenModel Model to merge the parent's variables into
+     * @param parentCodegenModel Model to merge the properties from
+     * @return
+     */
     private static CodegenModel reconcileProperties(CodegenModel codegenModel,
                                                     CodegenModel parentCodegenModel) {
-        // To support inheritance in this generator, we will analyze
-        // the parent and child models, look for properties that match, and remove
-        // them from the child models and leave them in the parent.
-        // Because the child models extend the parents, the properties
-        // will be available via the parent.
-
-        // Get the properties for the parent and child models
-        final List<CodegenProperty> parentModelCodegenProperties = parentCodegenModel.vars;
-        List<CodegenProperty> codegenProperties = codegenModel.vars;
-        codegenModel.allVars = new ArrayList<CodegenProperty>(codegenProperties);
-        codegenModel.parentVars = parentCodegenModel.allVars;
-
-        // Iterate over all of the parent model properties
-        boolean removedChildProperty = false;
-
-        for (CodegenProperty parentModelCodegenProperty : parentModelCodegenProperties) {
-            // Now that we have found a prop in the parent class,
-            // and search the child class for the same prop.
-            Iterator<CodegenProperty> iterator = codegenProperties.iterator();
-            while (iterator.hasNext()) {
-                CodegenProperty codegenProperty = iterator.next();
-                if (codegenProperty.baseName == parentModelCodegenProperty.baseName) {
-                    // We found a property in the child class that is
-                    // a duplicate of the one in the parent, so remove it.
-                    iterator.remove();
-                    removedChildProperty = true;
-                }
+        Set<String> existingProperties = new HashSet<String>();
+        for (CodegenProperty property: codegenModel.allVars) {
+            existingProperties.add(property.baseName);
+        }
+        for (CodegenProperty parentProperty: parentCodegenModel.allVars) {
+            if (!existingProperties.contains(parentProperty.baseName)) {
+                codegenModel.allVars.add(parentProperty);
             }
         }
-
-        if (removedChildProperty) {
-            // If we removed an entry from this model's vars, we need to ensure hasMore is updated
-            int count = 0;
-            int numVars = codegenProperties.size();
-            for (CodegenProperty codegenProperty : codegenProperties) {
-                count += 1;
-                codegenProperty.getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME, (count < numVars) ? true : false);
-            }
-            codegenModel.vars = codegenProperties;
+        int count = 0;
+        int numVars = codegenModel.allVars.size();
+        for (CodegenProperty codegenProperty : codegenModel.allVars) {
+            count += 1;
+            codegenProperty.getVendorExtensions().put(CodegenConstants.HAS_MORE_EXT_NAME, (count < numVars) ? true : false);
         }
-
-
         return codegenModel;
     }
 
