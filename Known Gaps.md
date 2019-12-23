@@ -26,3 +26,9 @@ This issue is the result of the way that codegen generates the json for the must
 SendMessageRequest:
   $ref: '#/components/schemas/MessageToSend'
 ```
+Work around:
+```yaml
+SendMessageRequest:
+  allOf:
+    - $ref: '#/components/schemas/MessageToSend'
+```
