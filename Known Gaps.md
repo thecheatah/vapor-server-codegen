@@ -22,13 +22,15 @@ This issue is the result of the way that codegen generates the json for the must
 9. URL Path parameter slug names must match. The following endpoints will conflict `/user/{userId}` and `/user/{anotherName}/messages`. To fix this the second endpoint should be `/user/{userId}/messages`
 
 10. Models that refer another models don't result in a typealias
-```yaml
-SendMessageRequest:
-  $ref: '#/components/schemas/MessageToSend'
-```
-Workaround:
-```yaml
-SendMessageRequest:
-  allOf:
-    - $ref: '#/components/schemas/MessageToSend'
-```
+    ```yaml
+    SendMessageRequest:
+      $ref: '#/components/schemas/MessageToSend'
+    ```
+    Workaround:
+    ```yaml
+    SendMessageRequest:
+      allOf:
+        - $ref: '#/components/schemas/MessageToSend'
+    ```
+
+11. GET Query parameters that are arrays have to end with `[]`
