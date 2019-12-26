@@ -30,7 +30,7 @@ public protocol AuthenticationMiddleware: Middleware {
 public class DummyAuthType: Authenticatable {}
 
 public func routes<{{#authMethods}}authFor{{{name}}}: AuthenticationMiddleware, {{/authMethods}}{{#apiInfo}}{{#apis}}{{classVarName}}: {{classname}}{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}>
-  (_ app: Application{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classVarName}}{{/apis}}{{/apiInfo}}{{#authMethods}}, authFor{{{name}}}: authFor{{{name}}}{{/authMethods}})
+  (_ app: RoutesBuilder{{#apiInfo}}{{#apis}}, {{classVarName}}: {{classVarName}}{{/apis}}{{/apiInfo}}{{#authMethods}}, authFor{{{name}}}: authFor{{{name}}}{{/authMethods}})
   throws
   where {{#hasAuthMethods}}{{#authMethods}}{{#apiInfo}}{{#apis}}authFor{{{name}}}.AuthType == {{classVarName}}.AuthType{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}{{/authMethods}}{{/hasAuthMethods}}{{^hasAuthMethods}}{{#apiInfo}}{{#apis}}{{classVarName}}.AuthType == DummyAuthType.Type{{#hasMore}}, {{/hasMore}}{{/apis}}{{/apiInfo}}{{/hasAuthMethods}}
   {
